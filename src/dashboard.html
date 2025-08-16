@@ -806,6 +806,67 @@
             0%, 100% { box-shadow: 0 0 5px rgba(255, 107, 53, 0.5); }
             50% { box-shadow: 0 0 15px rgba(255, 107, 53, 0.8); }
         }
+        
+        .orchestration-status {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin: 1rem 0;
+        }
+
+        .workflow-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .workflow-item.active {
+            background: rgba(76, 175, 80, 0.1);
+            border: 1px solid var(--success-green);
+        }
+
+        .workflow-item.processing {
+            background: rgba(255, 152, 0, 0.1);
+            border: 1px solid var(--warning-orange);
+        }
+
+        .workflow-item.pending {
+            background: rgba(158, 158, 158, 0.1);
+            border: 1px solid #9e9e9e;
+        }
+
+        .workflow-icon {
+            font-size: 1.2rem;
+            width: 30px;
+            text-align: center;
+        }
+
+        .workflow-details {
+            flex: 1;
+        }
+
+        .workflow-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .workflow-status {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-top: 0.25rem;
+        }
+
+        .workflow-arrow {
+            text-align: center;
+            color: var(--accent-orange);
+            font-size: 1.2rem;
+            font-weight: bold;
+            padding: 0.5rem 0;
+        }
     </style>
 </head>
 <body>
@@ -1104,6 +1165,53 @@
                             <div class="timeline-agencies">Emergency Management, Red Cross</div>
                         </div>
                         <div class="timeline-status status-pending">PENDING</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Add this new panel to your dashboard -->
+            <div class="panel-card">
+                <div class="panel-header">
+                    <div class="panel-icon">
+                        <i class="fas fa-sitemap"></i>
+                    </div>
+                    watsonx Orchestrate Workflow Engine
+                </div>
+                
+                <div class="orchestration-status">
+                    <div class="workflow-item active">
+                        <div class="workflow-icon">🔍</div>
+                        <div class="workflow-details">
+                            <div class="workflow-name">Threat Detection Skill</div>
+                            <div class="workflow-status">COMPLETED - 2.3s</div>
+                        </div>
+                    </div>
+                    
+                    <div class="workflow-arrow">↓</div>
+                    
+                    <div class="workflow-item processing">
+                        <div class="workflow-icon">🎯</div>
+                        <div class="workflow-details">
+                            <div class="workflow-name">Resource Optimization Skill</div>
+                            <div class="workflow-status">PROCESSING - 15.7s</div>
+                        </div>
+                    </div>
+                    
+                    <div class="workflow-arrow">↓</div>
+                    
+                    <div class="workflow-item pending">
+                        <div class="workflow-icon">📢</div>
+                        <div class="workflow-details">
+                            <div class="workflow-name">Communication Coordination Skill</div>
+                            <div class="workflow-status">QUEUED</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="ai-insight">
+                    <div class="insight-header">Orchestration Intelligence</div>
+                    <div class="insight-content">
+                        watsonx Orchestrate managing 3 autonomous skills with intelligent workflow routing. HIGH threat level triggered parallel execution mode for maximum response speed.
                     </div>
                 </div>
             </div>

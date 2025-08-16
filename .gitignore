@@ -1,5 +1,6 @@
 # Folders
-.venv_disaster
+.venv_disaster/
+*__pycache__/
 
 # Files
 *pt

@@ -1,0 +1,610 @@
+{
+  "demo_timestamp": "2025-08-16T03:34:03.447876+00:00",
+  "demo_duration_seconds": 38.779757022857666,
+  "scenario_used": "San Francisco M6.2 Earthquake",
+  "key_metrics": {
+    "response_time": 38.779757022857666,
+    "threats_detected": 5,
+    "ai_decisions": 30,
+    "lives_protected": 1866,
+    "population_reach": 95,
+    "economic_impact": 37320000000
+  },
+  "full_response": {
+    "response_metadata": {
+      "response_id": "DSR_1755315204",
+      "start_time": "2025-08-16T03:33:24.668050+00:00",
+      "end_time": "2025-08-16T03:34:03.447258+00:00",
+      "total_response_time_seconds": 38.779208,
+      "region_bbox": [
+        -122.5,
+        37.0,
+        -121.5,
+        38.0
+      ],
+      "center_coordinates": [
+        37.7749,
+        -122.4194
+      ],
+      "affected_population": 875000
+    },
+    "threat_assessment": {
+      "total_threats_detected": 5,
+      "threat_details": [
+        {
+          "type": "earthquake",
+          "severity": "LOW",
+          "confidence": 0.219,
+          "location": [
+            37.3224983215332,
+            -121.685836791992
+          ],
+          "source": "USGS"
+        },
+        {
+          "type": "earthquake",
+          "severity": "LOW",
+          "confidence": 0.20400000000000001,
+          "location": [
+            37.647,
+            -122.049166666667
+          ],
+          "source": "USGS"
+        },
+        {
+          "type": "earthquake",
+          "severity": "LOW",
+          "confidence": 0.24500000000000002,
+          "location": [
+            37.3641662597656,
+            -121.723663330078
+          ],
+          "source": "USGS"
+        },
+        {
+          "type": "earthquake",
+          "severity": "LOW",
+          "confidence": 0.22400000000000003,
+          "location": [
+            37.0588340759277,
+            -121.840835571289
+          ],
+          "source": "USGS"
+        },
+        {
+          "type": "earthquake",
+          "severity": "LOW",
+          "confidence": 0.211,
+          "location": [
+            37.7820014953613,
+            -122.238670349121
+          ],
+          "source": "USGS"
+        }
+      ],
+      "compound_risk_analysis": {
+        "compound_risk": "MEDIUM",
+        "threat_count": 5,
+        "total_severity_score": 5,
+        "ai_analysis": "\nHere is the multi-threat assessment based on the provided information:\n\n1. Cascading failure potential: HIGH\n   - The presence of multiple earthquakes occurring simultaneously increases the likelihood of cascading failures across various infrastructure systems. The repeated seismic activity can lead to progressive damage, causing secondary failures in buildings, roads, bridges, and utilities.\n\n2. Resource strain amplification: CRITICAL\n   - With five earthquakes happening at once, the demand for emergency services, medical care, and rescue operations will be significantly amplified. This strain can lead to resource exhaustion, such as shortages of medical supplies, personnel, and equipment, making it challenging to provide adequate support to affected populations.\n\n3. Evacuation route conflicts: HIGH\n   - Simultaneous earthquakes can cause widespread damage to roads, bridges, and other critical transportation infrastructure. This damage may result in conflicting evacuation routes, making it difficult for emergency responders and civilians to navigate safely and efficiently.\n\n4. Infrastructure vulnerability overlaps: CRITICAL\n   - The repeated seismic activity will likely expose and exacerbate existing vulnerabilities in critical infrastructure systems. Overlapping weaknesses in buildings, utilities, and transportation networks can lead to a higher likelihood of widespread and prolonged disruptions.\n\n5. Communication system overload risk: HIGH\n   - The simultaneous occurrence of multiple earthquakes will put immense pressure on communication systems, including cellular networks, landlines, and emergency radio systems. The increased demand for communication services may result in network congestion, service disruptions, and difficulties in coordinating response efforts among various agencies and organizations.\n\nCompound Risk Level: CRITICAL\n\nSpecific coordination challenges:\n\n1. Prioritizing response efforts: With multiple earthquakes occurring simultaneously, emergency responders will need to prioritize their efforts to address the most critical needs and prevent further damage. This may involve making tough decisions about which areas to focus on first, potentially leaving some communities without immediate assistance.\n\n2. Resource allocation: The high resource strain amplification necessitates careful planning and coordination to ensure that limited resources are distributed fairly and effectively across affected areas. This may involve",
+        "coordination_priority": false
+      },
+      "satellite_analysis": {
+        "imagery_data": {
+          "image_url": "https://wvs.earthdata.nasa.gov/api/v1/snapshot?REQUEST=GetSnapshot&TIME=2025-08-16&BBOX=-122.6694%2C37.5249%2C-122.1694%2C38.0249&CRS=EPSG%3A4326&LAYERS=VIIRS_SNPP_DayNightBand_ENCC%2CReference_Labels&FORMAT=image%2Fjpeg&WIDTH=512&HEIGHT=512",
+          "layers": [
+            "VIIRS_SNPP_DayNightBand_ENCC",
+            "Reference_Labels"
+          ],
+          "bbox": "-122.6694,37.5249,-122.1694,38.0249",
+          "date": "2025-08-16",
+          "resolution": "250m"
+        },
+        "ai_analysis": "Image analysis for: \n        Analyze satellite imagery for earthquake disaster indicators:\n        \n        Location: 37.7749, -122.4194\n        Layers: ['VIIRS_SNPP_DayNightBand_ENCC', 'Reference_Labels']\n        \n        Look for:\n        1. Surface changes or displacement\n        2. Smoke, fire, or flood patterns\n        3. Infrastructure damage indicators\n        4. Environmental hazards\n        \n        Provide assessment of visible damage and risk factors.\n        ",
+        "analysis_timestamp": "2025-08-16T03:33:36.699273+00:00"
+      }
+    },
+    "resource_coordination": {
+      "deployment_plan": "\n```",
+      "evacuation_routes": [
+        {
+          "route_id": "EVAC_001",
+          "from_zone": "Risk Zone A",
+          "to_shelter": "Emergency Shelter A",
+          "waypoints": [
+            {
+              "lat": 37.3224983215332,
+              "lon": -121.685836791992
+            },
+            {
+              "lat": 37.420124244689944,
+              "lon": -121.8586265563964
+            },
+            {
+              "lat": 37.51775016784668,
+              "lon": -122.0314163208008
+            }
+          ],
+          "capacity": 5000,
+          "travel_time_minutes": 15,
+          "safety_rating": "HIGH",
+          "threat_avoidance": "earthquake",
+          "alternative_routes": 2
+        },
+        {
+          "route_id": "EVAC_002",
+          "from_zone": "Risk Zone B",
+          "to_shelter": "Emergency Shelter B",
+          "waypoints": [
+            {
+              "lat": 37.647,
+              "lon": -122.049166666667
+            },
+            {
+              "lat": 37.56615,
+              "lon": -122.02212500000016
+            },
+            {
+              "lat": 37.4853,
+              "lon": -121.9950833333333
+            }
+          ],
+          "capacity": 4000,
+          "travel_time_minutes": 20,
+          "safety_rating": "MEDIUM",
+          "threat_avoidance": "earthquake",
+          "alternative_routes": 2
+        },
+        {
+          "route_id": "EVAC_003",
+          "from_zone": "Risk Zone C",
+          "to_shelter": "Emergency Shelter C",
+          "waypoints": [
+            {
+              "lat": 37.3641662597656,
+              "lon": -121.723663330078
+            },
+            {
+              "lat": 37.43887481689452,
+              "lon": -121.8756484985351
+            },
+            {
+              "lat": 37.51358337402344,
+              "lon": -122.0276336669922
+            }
+          ],
+          "capacity": 3000,
+          "travel_time_minutes": 25,
+          "safety_rating": "HIGH",
+          "threat_avoidance": "earthquake",
+          "alternative_routes": 2
+        }
+      ],
+      "efficiency_metrics": {
+        "resource_utilization_percent": 17.0,
+        "deployed_resources": 2641,
+        "total_available": 15540,
+        "estimated_response_time_minutes": 43,
+        "population_coverage_percent": 95,
+        "multi_threat_coordination_score": 100
+      },
+      "resource_allocations": [
+        "ResourceAllocation(resource_type='search_rescue_teams', quantity=2, location=(37.3224983215332, -121.685836791992), assignment='Urban Search and Rescue - 13 km ESE of Alum Rock, CA', priority=1, estimated_arrival='15-25 minutes')",
+        "ResourceAllocation(resource_type='medical_personnel', quantity=50, location=(37.3224983215332, -121.685836791992), assignment='Trauma response and triage', priority=1, estimated_arrival='20-30 minutes')",
+        "ResourceAllocation(resource_type='search_rescue_teams', quantity=3, location=(37.647, -122.049166666667), assignment='Urban Search and Rescue - 2 km E of Hayward, CA', priority=1, estimated_arrival='15-25 minutes')",
+        "ResourceAllocation(resource_type='medical_personnel', quantity=70, location=(37.647, -122.049166666667), assignment='Trauma response and triage', priority=1, estimated_arrival='20-30 minutes')",
+        "ResourceAllocation(resource_type='search_rescue_teams', quantity=4, location=(37.3641662597656, -121.723663330078), assignment='Urban Search and Rescue - 9 km ESE of Alum Rock, CA', priority=1, estimated_arrival='15-25 minutes')",
+        "ResourceAllocation(resource_type='medical_personnel', quantity=90, location=(37.3641662597656, -121.723663330078), assignment='Trauma response and triage', priority=1, estimated_arrival='20-30 minutes')",
+        "ResourceAllocation(resource_type='search_rescue_teams', quantity=5, location=(37.0588340759277, -121.840835571289), assignment='Urban Search and Rescue - 3 km NE of Day Valley, CA', priority=1, estimated_arrival='15-25 minutes')",
+        "ResourceAllocation(resource_type='medical_personnel', quantity=110, location=(37.0588340759277, -121.840835571289), assignment='Trauma response and triage', priority=1, estimated_arrival='20-30 minutes')",
+        "ResourceAllocation(resource_type='search_rescue_teams', quantity=6, location=(37.7820014953613, -122.238670349121), assignment='Urban Search and Rescue - 2 km SW of Oakland, CA', priority=1, estimated_arrival='15-25 minutes')",
+        "ResourceAllocation(resource_type='medical_personnel', quantity=130, location=(37.7820014953613, -122.238670349121), assignment='Trauma response and triage', priority=1, estimated_arrival='20-30 minutes')"
+      ],
+      "coordination_timeline": [
+        {
+          "time_offset": "+0 min",
+          "activity": "Automated threat detection and analysis complete",
+          "responsible_agencies": [
+            "DisasterShield AI",
+            "Emergency Operations Center"
+          ],
+          "status": "COMPLETED"
+        },
+        {
+          "time_offset": "+2 min",
+          "activity": "Resource deployment optimization and coordination initiated",
+          "responsible_agencies": [
+            "Emergency Management",
+            "Fire Department",
+            "Police"
+          ],
+          "status": "IN_PROGRESS"
+        },
+        {
+          "time_offset": "+5 min",
+          "activity": "Search and rescue deployment to 13 km ESE of Alum Rock, CA",
+          "responsible_agencies": [
+            "Fire Department",
+            "Urban Search and Rescue"
+          ],
+          "status": "PENDING"
+        },
+        {
+          "time_offset": "+10 min",
+          "activity": "Search and rescue deployment to 2 km E of Hayward, CA",
+          "responsible_agencies": [
+            "Fire Department",
+            "Urban Search and Rescue"
+          ],
+          "status": "PENDING"
+        },
+        {
+          "time_offset": "+15 min",
+          "activity": "Search and rescue deployment to 9 km ESE of Alum Rock, CA",
+          "responsible_agencies": [
+            "Fire Department",
+            "Urban Search and Rescue"
+          ],
+          "status": "PENDING"
+        },
+        {
+          "time_offset": "+20 min",
+          "activity": "Search and rescue deployment to 3 km NE of Day Valley, CA",
+          "responsible_agencies": [
+            "Fire Department",
+            "Urban Search and Rescue"
+          ],
+          "status": "PENDING"
+        },
+        {
+          "time_offset": "+25 min",
+          "activity": "Search and rescue deployment to 2 km SW of Oakland, CA",
+          "responsible_agencies": [
+            "Fire Department",
+            "Urban Search and Rescue"
+          ],
+          "status": "PENDING"
+        },
+        {
+          "time_offset": "+15 min",
+          "activity": "Primary evacuation routes activated and traffic management deployed",
+          "responsible_agencies": [
+            "Police",
+            "Department of Transportation"
+          ],
+          "status": "PENDING"
+        },
+        {
+          "time_offset": "+30 min",
+          "activity": "Emergency shelter operations commence",
+          "responsible_agencies": [
+            "Emergency Management",
+            "Red Cross",
+            "Salvation Army"
+          ],
+          "status": "PENDING"
+        },
+        {
+          "time_offset": "+45 min",
+          "activity": "Medical triage and treatment facilities operational",
+          "responsible_agencies": [
+            "Emergency Medical Services",
+            "Hospitals"
+          ],
+          "status": "PENDING"
+        }
+      ]
+    },
+    "communication_deployment": {
+      "citizen_alerts": {
+        "generated_alerts": "\nHere is the JSON formatted response:\n\n```json\n{\n  \"SMS_ALERT\": \"URGENT: LOW EARTHQUAKE THREAT. EVACUATE NORTH TO SHELTERS. Reply 'SAFE' to confirm. 3 routes available. Stay calm, act now.\",\n  \"DETAILED_GUIDANCE\": \"LOW EARTHQUAKE THREAT. Seek shelter IMMEDIATELY. 3 safe zones: A (500), B (300), C (200). Bring essentials, avoid high-rises. Vulnerable: check in with neighbors. Stay informed, stay safe.\",\n  \"SOCIAL_MEDIA_POST\": \"URGENT: LOW EARTHQUAKE THREAT. Evacuate north to shelters. Reply 'SAFE' to confirm. #EarthquakeAlert #StaySafe. Source: [Official Source]. Help your community.\",\n  \"EMAIL_BULLETIN\": \"URGENT: LOW EARTHQUAKE THREAT. Evacuate north to shelters. Reply 'SAFE' to confirm. 3 routes: N1, N2, N3. Shelters: A (500), B (300), C (200). Bring essentials, avoid high-rises. Vulnerable: check in with neighbors. Contact: [Emergency Hotline], [Email]. Stay informed, stay safe.\"\n}\n```",
+        "delivery_channels": {
+          "SMS": {
+            "capacity": 50000,
+            "delivery_rate": 0.98,
+            "latency_seconds": 5
+          },
+          "Push Notification": {
+            "capacity": 100000,
+            "delivery_rate": 0.94,
+            "latency_seconds": 2
+          },
+          "Emergency Broadcast": {
+            "capacity": 500000,
+            "delivery_rate": 0.99,
+            "latency_seconds": 1
+          },
+          "Social Media": {
+            "capacity": 200000,
+            "delivery_rate": 0.85,
+            "latency_seconds": 10
+          },
+          "Email": {
+            "capacity": 75000,
+            "delivery_rate": 0.96,
+            "latency_seconds": 15
+          }
+        },
+        "delivery_status": {
+          "SMS": {
+            "targeted": 50000,
+            "delivered": 49000,
+            "success_rate": 98.0,
+            "latency_seconds": 5,
+            "estimated_reach": 49000
+          },
+          "Push Notification": {
+            "targeted": 100000,
+            "delivered": 94000,
+            "success_rate": 94.0,
+            "latency_seconds": 2,
+            "estimated_reach": 94000
+          },
+          "Emergency Broadcast": {
+            "targeted": 500000,
+            "delivered": 495000,
+            "success_rate": 99.0,
+            "latency_seconds": 1,
+            "estimated_reach": 495000
+          },
+          "Social Media": {
+            "targeted": 200000,
+            "delivered": 170000,
+            "success_rate": 85.0,
+            "latency_seconds": 10,
+            "estimated_reach": 170000
+          },
+          "Email": {
+            "targeted": 75000,
+            "delivered": 72000,
+            "success_rate": 96.0,
+            "latency_seconds": 15,
+            "estimated_reach": 72000
+          }
+        },
+        "citizen_guidance": {
+          "immediate_actions": [
+            "Drop, Cover, and Hold On if shaking continues",
+            "Stay away from windows and heavy objects",
+            "If outdoors, move away from buildings and power lines",
+            "Drop, Cover, and Hold On if shaking continues",
+            "Stay away from windows and heavy objects",
+            "If outdoors, move away from buildings and power lines",
+            "Drop, Cover, and Hold On if shaking continues",
+            "Stay away from windows and heavy objects",
+            "If outdoors, move away from buildings and power lines",
+            "Drop, Cover, and Hold On if shaking continues",
+            "Stay away from windows and heavy objects",
+            "If outdoors, move away from buildings and power lines",
+            "Drop, Cover, and Hold On if shaking continues",
+            "Stay away from windows and heavy objects",
+            "If outdoors, move away from buildings and power lines"
+          ],
+          "evacuation_procedures": [
+            "Route EVAC_001: Risk Zone A to Emergency Shelter A (Travel time: 15 minutes)",
+            "Route EVAC_002: Risk Zone B to Emergency Shelter B (Travel time: 20 minutes)",
+            "Route EVAC_003: Risk Zone C to Emergency Shelter C (Travel time: 25 minutes)"
+          ],
+          "shelter_in_place": [],
+          "special_populations": [],
+          "supply_recommendations": [
+            "Emergency water (1 gallon per person per day for 3 days)",
+            "Non-perishable food for 3 days",
+            "Battery-powered radio and flashlight",
+            "Emergency water (1 gallon per person per day for 3 days)",
+            "Non-perishable food for 3 days",
+            "Battery-powered radio and flashlight",
+            "Emergency water (1 gallon per person per day for 3 days)",
+            "Non-perishable food for 3 days",
+            "Battery-powered radio and flashlight",
+            "Emergency water (1 gallon per person per day for 3 days)",
+            "Non-perishable food for 3 days",
+            "Battery-powered radio and flashlight",
+            "Emergency water (1 gallon per person per day for 3 days)",
+            "Non-perishable food for 3 days",
+            "Battery-powered radio and flashlight"
+          ]
+        },
+        "estimated_reach": {
+          "total_population": 875000,
+          "unique_individuals_reached": 300000,
+          "coverage_percentage": 34.3,
+          "multi_channel_redundancy": true,
+          "average_delivery_time_seconds": 8
+        },
+        "multilingual_support": true,
+        "accessibility_compliance": true,
+        "confirmation_tracking": true
+      },
+      "agency_coordination": {
+        "agency_coordination_plan": "\n1. FIRE_DEPARTMENT:\n\nRole and Responsibilities:\n- Fire suppression and rescue operations\n- Hazardous materials response\n- Search and rescue missions\n\nResource Requirements and Assignments:\n- Allocate 40% of available resources to fire suppression efforts\n- Deploy fire trucks and personnel to threat areas\n- Assign specialized units for hazardous materials response\n\nCommunication Protocols and Frequencies:\n- Use channel 5 for general communication\n- Establish a dedicated channel (channel 6) for coordination with EMS\n- Report progress and resource needs every 15 minutes\n\nCoordination Checkpoints and Reporting:\n- Regularly update Emergency Management on resource allocation and threat status\n- Coordinate with Police Department for traffic management and crowd control\n\nContingency Procedures:\n- In case of resource shortage, prioritize fire suppression and evacuation efforts\n- Implement a rotation system for personnel to prevent exhaustion\n\n2. POLICE_DEPARTMENT:\n\nRole and Responsibilities:\n- Traffic management and evacuation support\n- Crowd control and security priorities\n- Coordination with emergency management\n\nResource Requirements and Assignments:\n- Deploy personnel to manage traffic and evacuation routes\n- Assign units for crowd control and security\n- Coordinate with Fire Department for resource sharing\n\nCommunication Protocols and Frequencies:\n- Use channel 3 for general communication\n- Establish a dedicated channel (channel 4) for coordination with Fire Department\n- Report progress and resource needs every 15 minutes\n\nCoordination Checkpoints and Reporting:\n- Regularly update Emergency Management on traffic situation and evacuation progress\n- Coordinate with Fire Department for resource sharing and threat assessment\n\nContingency Procedures:\n- In case of traffic congestion, reroute evacuation routes and deploy additional personnel\n- Implement a rotation system for personnel to prevent exhaustion\n\n3. EMERGENCY_MEDICAL_SERVICES:\n\nRole and Responsibilities:\n- Medical response priorities and resource allocation\n- Hospital coordination and capacity management\n- Mass casualty incident protocols\n\nResource Requirements and Assignments:\n- Deploy ambulances and medical personnel to threat areas\n- Coordinate with hospitals for patient triage and capacity\n- Implement mass casualty incident protocols\n\nCommunication Protocols and Frequencies:\n- Use channel 2 for general communication\n- Establish a dedicated channel (channel 7) for coordination with Fire Department\n- Report progress and resource needs every 15 minutes\n\nCoordination Checkpoints and Reporting:\n- Regularly update Emergency Management on medical response and hospital capacity\n- Coordinate with Fire Department for patient triage and evacuation\n\nContingency Procedures:\n- In case of hospital capacity issues, establish temporary treatment facilities\n- Implement a rotation system for medical personnel to prevent exhaustion\n\n4. EMERGENCY_MANAGEMENT:\n\nRole and Responsibilities:\n- Overall coordination and resource management\n- Public information and media coordination\n- Shelter operations and logistics\n\nResource Requirements and Assignments:\n- Coordinate resource allocation and deployment\n- Manage public information and media relations\n- Oversee shelter operations and logistics\n\nCommunication Protocols and Frequencies:\n- Use channel 1 for general communication\n- Establish dedicated channels for specific tasks (e.g., channel 8 for public information, channel 9 for shelter operations)\n- Report progress and resource needs every 30 minutes\n\nCoordination Checkpoints and Reporting:\n- Regularly update all agencies on resource allocation",
+        "communication_matrix": {
+          "primary_frequencies": {
+            "command_control": "154.265 MHz",
+            "tactical_operations": "154.280 MHz",
+            "medical_coordination": "463.025 MHz",
+            "fire_suppression": "154.445 MHz",
+            "law_enforcement": "155.475 MHz"
+          },
+          "digital_systems": {
+            "p25_trunked": "Primary digital radio system",
+            "firstnet": "Broadband communications",
+            "satellite_backup": "VSAT emergency backup",
+            "ham_radio": "Amateur radio emergency network"
+          },
+          "data_sharing_platforms": {
+            "eoc_software": "Emergency Operations Center management",
+            "gis_mapping": "Real-time situation mapping",
+            "resource_tracking": "Asset and personnel tracking",
+            "weather_data": "Meteorological information sharing"
+          },
+          "backup_procedures": {
+            "radio_failure": "Switch to alternate frequencies",
+            "network_outage": "Activate satellite communications",
+            "power_loss": "Deploy mobile communication units"
+          }
+        },
+        "coordination_timeline": [
+          {
+            "time": "+0 min",
+            "milestone": "Threat Detection Complete",
+            "activities": [
+              "AI analysis finished",
+              "Threat assessment confirmed"
+            ],
+            "responsible_parties": [
+              "DisasterShield AI",
+              "EOC"
+            ],
+            "communication_type": "Automated alert",
+            "decision_points": [
+              "Activate emergency response"
+            ],
+            "status": "COMPLETED"
+          },
+          {
+            "time": "+2 min",
+            "milestone": "Initial Coordination",
+            "activities": [
+              "Resource deployment initiated",
+              "Agency notification"
+            ],
+            "responsible_parties": [
+              "Emergency Manager",
+              "Dispatch Centers"
+            ],
+            "communication_type": "Multi-agency alert",
+            "decision_points": [
+              "Resource allocation approval"
+            ],
+            "status": "IN_PROGRESS"
+          },
+          {
+            "time": "+5 min",
+            "milestone": "Field Deployment",
+            "activities": [
+              "First responders dispatched",
+              "Evacuation routes activated"
+            ],
+            "responsible_parties": [
+              "Fire",
+              "Police",
+              "EMS"
+            ],
+            "communication_type": "Tactical coordination",
+            "decision_points": [
+              "Route selection confirmation"
+            ],
+            "status": "PENDING"
+          },
+          {
+            "time": "+10 min",
+            "milestone": "Public Notification",
+            "activities": [
+              "Mass notification sent",
+              "Media briefing prepared"
+            ],
+            "responsible_parties": [
+              "PIO",
+              "Emergency Communications"
+            ],
+            "communication_type": "Public alert",
+            "decision_points": [
+              "Message approval and release"
+            ],
+            "status": "PENDING"
+          },
+          {
+            "time": "+15 min",
+            "milestone": "Operational Status",
+            "activities": [
+              "Field units operational",
+              "Command structure established"
+            ],
+            "responsible_parties": [
+              "Incident Commander",
+              "EOC Manager"
+            ],
+            "communication_type": "Status reporting",
+            "decision_points": [
+              "Escalation assessment"
+            ],
+            "status": "PENDING"
+          }
+        ],
+        "information_sharing_protocols": {
+          "real_time_sharing": {
+            "weather_data": "Continuous feed from NWS to all agencies",
+            "traffic_conditions": "DOT data shared with police and emergency management",
+            "hospital_capacity": "Real-time bed availability shared with EMS",
+            "resource_status": "Asset tracking shared across all agencies"
+          },
+          "scheduled_updates": {
+            "situation_reports": "Every 15 minutes during active response",
+            "resource_inventories": "Every 30 minutes or upon significant change",
+            "casualty_reports": "Every 30 minutes to EOC and hospitals",
+            "damage_assessments": "Every hour during daylight operations"
+          },
+          "security_protocols": {
+            "classification_levels": "Public, Sensitive, Restricted access",
+            "access_controls": "Role-based permissions by agency and function",
+            "data_encryption": "AES-256 encryption for sensitive communications",
+            "audit_logging": "All access and sharing activities logged"
+          }
+        },
+        "backup_communication_systems": {
+          "primary_backup": {
+            "system": "Satellite communications",
+            "activation_trigger": "Primary systems failure > 5 minutes",
+            "capacity": "80% of normal operations",
+            "deployment_time": "10-15 minutes"
+          },
+          "secondary_backup": {
+            "system": "Ham radio emergency network",
+            "activation_trigger": "All commercial systems unavailable",
+            "capacity": "Voice communications only",
+            "deployment_time": "5-10 minutes"
+          },
+          "tertiary_backup": {
+            "system": "Mobile command units with independent communications",
+            "activation_trigger": "All fixed infrastructure compromised",
+            "capacity": "50% coordination capability",
+            "deployment_time": "20-30 minutes"
+          },
+          "contingency_procedures": {
+            "runner_system": "Physical message delivery for critical communications",
+            "predetermined_locations": "Backup command posts identified and equipped",
+            "interoperability_kits": "Cross-platform radio equipment available"
+          }
+        }
+      }
+    },
+    "system_performance": {
+      "autonomous_decisions_made": 30,
+      "agents_activated": 3,
+      "data_sources_integrated": 6,
+      "response_efficiency_score": 88.0,
+      "estimated_lives_protected": 1866,
+      "economic_loss_prevented": 37320000000,
+      "population_reach_percentage": 95
+    },
+    "next_steps": {
+      "continuous_monitoring": true,
+      "resource_tracking": true,
+      "situation_updates_frequency": "15 minutes",
+      "escalation_triggers": [
+        "New threats detected",
+        "Resource constraints",
+        "Communication failures"
+      ]
+    },
+    "watsonx_metrics": {
+      "session_runtime_seconds": 38.779365,
+      "total_watsonx_requests": 9,
+      "estimated_tokens_used": 5430,
+      "average_response_time": 2.844166146384345,
+      "error_rate": 0.0,
+      "tokens_per_minute": 5430.0
+    }
+  }
+}
