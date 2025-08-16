@@ -1,4 +1,6 @@
 # Folders
+.venv_disaster
 
 # Files
+*pt
 .env

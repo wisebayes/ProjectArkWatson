@@ -1,0 +1,47 @@
+# IBM watsonx.ai and AI/ML libraries
+ibm-watsonx-ai>=0.2.6
+ibm-watson-machine-learning>=1.0.335
+
+# Core data processing
+requests>=2.31.0
+aiohttp>=3.9.0
+pandas>=2.0.0
+numpy>=1.24.0
+
+# Geospatial and mapping
+geopy>=2.3.0
+folium>=0.14.0
+geopandas>=0.13.0
+shapely>=2.0.0
+
+# Date/time handling
+python-dateutil>=2.8.2
+
+# JSON and data handling
+ujson>=5.8.0
+
+# Async support
+asyncio>=3.4.3
+
+# Logging and monitoring
+structlog>=23.1.0
+
+# Web framework (for dashboard)
+fastapi>=0.104.0
+uvicorn>=0.24.0
+
+# Environment management
+python-dotenv>=1.0.0
+
+# Testing
+pytest>=7.4.0
+pytest-asyncio>=0.21.0
+
+# Image processing (for satellite imagery)
+Pillow>=10.0.0
+
+# Mathematical operations
+scipy>=1.11.0
+
+# HTTP client improvements
+httpx>=0.25.0
