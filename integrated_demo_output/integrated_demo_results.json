@@ -1,0 +1,60 @@
+{
+  "timestamp": "2025-08-16T00:15:53.609413",
+  "demo_type": "integrated_disaster_management",
+  "detection_phase": {
+    "detection_results": {
+      "usgs_earthquakes": 3,
+      "noaa_weather_alerts": 1,
+      "fema_declarations": 0,
+      "nasa_imagery": "available",
+      "osm_infrastructure": 47
+    },
+    "classification": {
+      "threat_detected": true,
+      "disaster_type": "earthquake",
+      "confidence": 0.78,
+      "severity": "moderate",
+      "requires_confirmation": true
+    },
+    "confirmation": {
+      "confirmed": true,
+      "confidence": 0.85,
+      "sources_found": 3
+    },
+    "impact": {
+      "severity_level": "moderate",
+      "population_at_risk": 50000,
+      "escalation_required": true
+    },
+    "planning_triggered": true
+  },
+  "planning_phase": {
+    "deployment_plan": {
+      "teams_deployed": 8,
+      "zones_covered": 12,
+      "deployment_strategy": "Priority zones first",
+      "total_population_covered": 45000
+    },
+    "evacuation_plan": {
+      "routes_planned": 25,
+      "average_distance": 8.5,
+      "total_capacity": 12000,
+      "evacuation_time": 45
+    },
+    "resource_allocation": {
+      "evacuation_centers_active": 12,
+      "capacity_utilization": 78,
+      "special_needs_accommodated": 4200
+    },
+    "notifications": {
+      "emergency_management": true,
+      "response_teams": true,
+      "public_alerts": true,
+      "total_notifications": 23
+    }
+  },
+  "total_teams_deployed": 8,
+  "total_population_covered": 45000,
+  "evacuation_capacity": 12000,
+  "notifications_sent": 23
+}

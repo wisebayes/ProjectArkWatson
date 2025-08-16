@@ -1,0 +1,60 @@
+{
+  "timestamp": "2025-08-15T23:26:34.701634",
+  "monitoring_summary": {
+    "total_alerts": 4,
+    "highest_magnitude": 4.2,
+    "active_weather_alerts": 1
+  },
+  "classification": {
+    "threat_detected": true,
+    "disaster_type": "earthquake",
+    "confidence_score": 0.78,
+    "severity_level": "moderate",
+    "requires_confirmation": true,
+    "reasoning": "Multiple earthquakes detected with magnitude 4.2, weather alert present"
+  },
+  "confirmation": {
+    "confirmed": true,
+    "confidence": 0.85,
+    "sources_found": 3,
+    "news_articles": [
+      "USGS reports increased activity",
+      "Bay Area seismic monitoring"
+    ]
+  },
+  "severity": {
+    "severity_level": "moderate",
+    "severity_score": 0.65,
+    "population_at_risk": 50000,
+    "escalation_required": true,
+    "recommendations": [
+      "Monitor situation closely",
+      "Prepare evacuation plans",
+      "Alert emergency services"
+    ]
+  },
+  "safe_zones": [
+    {
+      "name": "SF General Hospital",
+      "capacity": 500,
+      "type": "hospital"
+    },
+    {
+      "name": "Golden Gate Park",
+      "capacity": 2000,
+      "type": "open_space"
+    },
+    {
+      "name": "Civic Center Plaza",
+      "capacity": 1000,
+      "type": "public_space"
+    }
+  ],
+  "management_actions": [
+    "\ud83d\ude81 Deploy emergency response teams",
+    "\ud83d\udce2 Issue public warnings and alerts",
+    "\ud83d\ude8c Coordinate evacuation transportation",
+    "\ud83c\udfe5 Prepare medical facilities",
+    "\ud83d\udcde Establish emergency communication center"
+  ]
+}

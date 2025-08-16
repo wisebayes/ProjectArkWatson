@@ -1,0 +1,21 @@
+zone_id,zone_name,center_lat,center_lon,radius_km,population,population_density_per_km2,vulnerability_score,demographics,special_needs_population
+PZ001,Financial District,37.7946,-122.4040,1.0,35000,28000,medium,"business_workers,tourists",2800
+PZ002,Chinatown,37.7941,-122.4078,0.8,18000,35000,high,"elderly,tourists,residents",5400
+PZ003,North Beach,37.8041,-122.4078,1.2,15000,10500,medium,"residents,tourists",1800
+PZ004,Russian Hill,37.8020,-122.4187,1.0,12000,15000,medium,"affluent_residents",1200
+PZ005,Nob Hill,37.7946,-122.4161,0.9,8000,12000,medium,"affluent_residents,hotels",800
+PZ006,Union Square,37.7880,-122.4075,0.7,5000,10000,low,"shoppers,tourists,workers",500
+PZ007,SOMA South,37.7749,-122.4194,2.0,45000,11250,medium,"tech_workers,residents",3600
+PZ008,Mission District,37.7598,-122.4148,2.5,85000,17000,high,"families,latinos,youth",12750
+PZ009,Castro District,37.7609,-122.4350,1.5,25000,11100,medium,"residents,lgbtq_community",2000
+PZ010,Haight-Ashbury,37.7694,-122.4481,1.8,22000,6800,medium,"young_adults,families",1760
+PZ011,Sunset District,37.7436,-122.4681,3.0,75000,8300,medium,"families,elderly,asian",9000
+PZ012,Richmond District,37.7794,-122.4694,3.2,70000,6850,medium,"families,elderly,russian",8400
+PZ013,Tenderloin,37.7837,-122.4151,0.6,30000,83000,very_high,"homeless,elderly,low_income",9000
+PZ014,Pacific Heights,37.7894,-122.4381,1.4,18000,9200,low,"affluent_residents",900
+PZ015,Marina District,37.8021,-122.4381,1.6,22000,8600,medium,"young_professionals",1320
+PZ016,Potrero Hill,37.7580,-122.3994,2.0,25000,6250,medium,"families,tech_workers",2000
+PZ017,Bernal Heights,37.7394,-122.4161,1.8,24000,7400,medium,"families,artists",1920
+PZ018,Outer Mission,37.7281,-122.4381,2.2,35000,7200,medium,"latino_families,working_class",4550
+PZ019,Visitacion Valley,37.7081,-122.4040,1.5,18000,8000,high,"families,pacific_islander",2700
+PZ020,Bayview-Hunters Point,37.7281,-122.3864,3.0,35000,3900,high,"african_american,families",5250

@@ -1,0 +1,41 @@
+---
+config:
+  flowchart:
+    curve: linear
+---
+graph TD;
+	__start__([<p>__start__</p>]):::first
+	api_monitoring(api_monitoring)
+	data_analysis(data_analysis)
+	watsonx_classification(watsonx_classification)
+	web_search_confirmation(web_search_confirmation)
+	severity_assessment(severity_assessment)
+	safe_zone_analysis(safe_zone_analysis)
+	create_event_record(create_event_record)
+	trigger_planning_workflow(trigger_planning_workflow)
+	wait_interval(wait_interval)
+	log_false_positive(log_false_positive)
+	__end__([<p>__end__</p>]):::last
+	__start__ --> api_monitoring;
+	api_monitoring -.-> data_analysis;
+	api_monitoring -. &nbsp;error_handling&nbsp; .-> wait_interval;
+	create_event_record -.-> trigger_planning_workflow;
+	create_event_record -.-> wait_interval;
+	data_analysis -.-> wait_interval;
+	data_analysis -.-> watsonx_classification;
+	log_false_positive --> wait_interval;
+	safe_zone_analysis --> create_event_record;
+	severity_assessment -.-> create_event_record;
+	severity_assessment -.-> safe_zone_analysis;
+	trigger_planning_workflow --> wait_interval;
+	wait_interval --> api_monitoring;
+	watsonx_classification -.-> severity_assessment;
+	watsonx_classification -.-> wait_interval;
+	watsonx_classification -.-> web_search_confirmation;
+	web_search_confirmation -.-> log_false_positive;
+	web_search_confirmation -.-> severity_assessment;
+	api_monitoring -.-> __end__;
+	api_monitoring -.-> api_monitoring;
+	classDef default fill:#f2f0ff,line-height:1.2
+	classDef first fill-opacity:0
+	classDef last fill:#bfb6fc

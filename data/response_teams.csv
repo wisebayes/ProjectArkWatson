@@ -1,0 +1,16 @@
+team_id,team_name,team_type,base_lat,base_lon,capacity,specialization,availability_status,response_time_minutes,equipment_level
+RT001,SF Fire Station 1,fire_rescue,37.7849,-122.4094,12,urban_rescue,available,8,high
+RT002,SF Fire Station 2,fire_rescue,37.7749,-122.4194,10,fire_suppression,available,10,high
+RT003,SF Fire Station 3,fire_rescue,37.7549,-122.4394,8,hazmat,available,12,medium
+RT004,SFPD Emergency Response,police,37.7849,-122.4194,6,crowd_control,available,6,medium
+RT005,SF Paramedic Unit 1,medical,37.7749,-122.4094,4,emergency_medical,available,7,high
+RT006,SF Paramedic Unit 2,medical,37.7649,-122.4294,4,trauma_care,available,9,high
+RT007,National Guard Unit A,military,37.7949,-122.4394,25,heavy_rescue,available,15,very_high
+RT008,Coast Guard Station,coast_guard,37.8049,-122.4694,8,water_rescue,available,20,high
+RT009,SF Emergency Management,coordination,37.7849,-122.4194,15,command_control,available,5,high
+RT010,Red Cross Response Team,humanitarian,37.7649,-122.4094,20,shelter_support,available,30,medium
+RT011,SF Fire Station 4,fire_rescue,37.7349,-122.4594,10,wildfire,available,14,high
+RT012,Cal Fire Unit,fire_rescue,37.7149,-122.4794,15,wildfire,available,25,very_high
+RT013,SFPD SWAT,police,37.7949,-122.4094,8,tactical,available,12,very_high
+RT014,SF Hazmat Team,hazmat,37.7749,-122.4494,6,hazmat,available,18,very_high
+RT015,Search and Rescue,search_rescue,37.7549,-122.4194,12,urban_search,available,16,high
