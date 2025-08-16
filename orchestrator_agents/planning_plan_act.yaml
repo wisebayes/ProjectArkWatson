@@ -1,0 +1,56 @@
+# IBM watsonx Orchestrator - Plan-Act agent for Disaster Planning
+
+provider: native
+kind: agent
+style: planner
+
+metadata:
+  name: disaster-planning-planner
+  display_name: Disaster Planning (Plan-Act)
+  description: |
+    Performs upfront plan for team deployment, evacuation routing, capacity optimization,
+    notifications, and outputs structured planning summary.
+
+structured_output:
+  schema:
+    type: object
+    properties:
+      deployments:
+        type: array
+        items:
+          type: object
+      evacuation:
+        type: object
+      resources:
+        type: object
+      notifications:
+        type: array
+        items:
+          type: object
+      summary:
+        type: object
+    required: [deployments, evacuation, resources, summary]
+
+tools:
+  - name: plan_team_deployments
+    type: python
+  - name: plan_routes
+    type: python
+  - name: optimize_evacuation_capacity
+    type: python
+
+instructions: |
+  - Given a confirmed disaster and planning inputs (teams, population zones, evacuation centers),
+    create a plan of actions. Use deployment optimization, then routing, then capacity optimization.
+  - Return data according to the structured output schema.
+
+starter_prompts:
+  default: true
+  prompts:
+    - id: plan_from_detection
+      title: Plan response from detection state
+      subtitle: Use inputs to produce a full plan
+      prompt: "Given detection state inputs provided by the detection agent, produce a full plan."
+      state: active
+
+

@@ -1,0 +1,52 @@
+# IBM watsonx Orchestrator - ReAct agent for Disaster Detection
+
+provider: native
+kind: agent
+style: react
+
+metadata:
+  name: disaster-detection-react
+  display_name: Disaster Detection (ReAct)
+  description: |
+    Monitors APIs, classifies potential disasters with watsonx, confirms via web search,
+    and assesses severity. Designed to replace LangGraph detection flow.
+
+chat_with_documents:
+  enabled: false
+
+context_access_enabled: true
+context_variables:
+  - name: wxo_user_name
+    description: Authenticated user's display name.
+  - name: wxo_email_id
+    description: Authenticated user's email address.
+
+instructions: |
+  - Monitor the configured region using the polling tool.
+  - Summarize signals and classify potential disasters with watsonx.
+  - If classification indicates moderate or above severity or requires confirmation, perform web confirmation.
+  - Assess severity and decide to escalate.
+  - Produce a concise JSON status with fields: monitoring_summary, classification, confirmation, severity.
+
+tools:
+  - name: poll_monitoring_sources
+    type: python
+  - name: classify_disaster_with_watsonx
+    type: python
+  - name: confirm_disaster_via_web
+    type: python
+  - name: assess_severity
+    type: python
+  - name: identify_safe_zones
+    type: python
+
+starter_prompts:
+  default: true
+  prompts:
+    - id: quick_check
+      title: Quick detection check
+      subtitle: Poll sources and classify for SF Bay Area
+      prompt: "Monitor 37.7749,-122.4194 radius 100km and provide detection status."
+      state: active
+
+
