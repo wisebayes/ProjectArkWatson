@@ -68,7 +68,7 @@ class DisasterShieldCore:
             
             # Text model for analysis and decision making
             self.text_model = Model(
-                model_id="ibm/granite-3-2-8b-instruct", 
+                model_id="ibm/granite-3-2-8b-instruct",
                 params={
                     GenParams.DECODING_METHOD: "greedy",
                     GenParams.MAX_NEW_TOKENS: 800,
@@ -83,7 +83,7 @@ class DisasterShieldCore:
             # Vision model for satellite imagery analysis
             try:
                 self.vision_model = Model(
-                    model_id="ibm/granite-vision-3-2-2b",
+                    model_id="ibm/granite-vision-3-2-2b",  # This is correct
                     credentials=self.watsonx_credentials,
                     project_id=self.watsonx_credentials.get('project_id')
                 )

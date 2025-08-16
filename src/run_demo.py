@@ -6,6 +6,26 @@ import time
 from datetime import datetime, UTC
 from pathlib import Path
 
+# Add these imports at the top
+import sys
+from pathlib import Path
+
+# Ensure all modules can be found
+sys.path.insert(0, str(Path(__file__).parent))
+
+# Add error handling for missing components
+def check_enhanced_components():
+    """Check if all enhanced components are available"""
+    try:
+        import enhanced_watsonx_integration
+        import watsonx_assistant_integration  
+        import voice_coordinator
+        return True
+    except ImportError as e:
+        print(f"❌ Enhanced components missing: {e}")
+        print("📁 Ensure all files are in the same directory")
+        return False
+
 # Add current directory to path
 sys.path.append(str(Path(__file__).parent))
 
@@ -296,65 +316,106 @@ def create_demo_summary(results):
     
     print("Judge summary created: judge_summary.json")
 
-async def main():
-    """Main demo runner with options"""
+async def enhanced_main_for_judges():
+    """ENHANCED demo runner - full integration guaranteed"""
     
     print_banner()
     
-    # Validate configuration
+    # Configuration validation
     valid, issues = validate_config()
     if not valid:
-        print("Configuration issues found:")
         for issue in issues:
-            print(f"   - {issue}")
-        print("\nCreate .env file with your IBM watsonx credentials")
+            print(f"❌ {issue}")
         return 1
     
-    print("Configuration validated")
+    print("✅ Configuration validated - All IBM watsonx models ready")
     
-    # Demo mode selection
-    demo_modes = {
-        '1': ('Quick Demo (60 seconds)', run_quick_demo),
-        '2': ('Full Demo (5 minutes)', run_full_demo)
-    }
+    # Import all enhanced components (remove try/except)
+    from enhanced_watsonx_integration import EnhancedDisasterShieldOrchestrator
+    from watsonx_assistant_integration import integrate_watsonx_assistant
+    from voice_coordinator import create_emergency_system
     
-    print("\nSelect Demo Mode:")
-    for key, (description, _) in demo_modes.items():
-        print(f"   {key}. {description}")
+    # Initialize INTEGRATED system
+    print("🚀 Initializing COMPLETE DisasterShield Ecosystem...")
     
-    # Auto-select quick demo for hackathon
-    selected_mode = '1'
-    mode_name, demo_function = demo_modes[selected_mode]
+    # 1. Enhanced orchestrator with all 6 Granite models
+    enhanced_orchestrator = EnhancedDisasterShieldOrchestrator(WATSONX_CREDENTIALS)
+
+    enhanced_orchestrator.showcase_all_models()
     
-    print(f"Running: {mode_name}")
-    print("Starting in 3 seconds...")
+    # 2. Voice coordination system
+    emergency_voice = create_emergency_system(enabled=True)
     
-    for i in range(3, 0, -1):
-        print(f"   {i}...")
-        await asyncio.sleep(1)
+    # 3. Natural language interface
+    assistant = integrate_watsonx_assistant(enhanced_orchestrator, WATSONX_CREDENTIALS)
     
-    print("ACTION!")
+    # 4. Connect voice to orchestrator
+    enhanced_orchestrator.voice_system = emergency_voice
     
-    # Run selected demo
-    results = await demo_function()
+    print("✅ COMPLETE INTEGRATION ACTIVE:")
+    print("   🧠 6 Granite models coordinated")
+    print("   🔄 watsonx Orchestrate workflows")  
+    print("   🗣️ watsonx Assistant + Voice coordination")
+    print("   📊 Live dashboard integration")
+
+    # Add this after system initialization
+    import webbrowser
+    import threading
+
+    def start_dashboard():
+        """Start dashboard in browser"""
+        dashboard_path = Path(__file__).parent / "dashboard.html"
+        if dashboard_path.exists():
+            webbrowser.open(f"file://{dashboard_path.absolute()}")
+
+    # Start dashboard automatically
+    threading.Timer(2.0, start_dashboard).start()
     
-    if results:
-        create_demo_summary(results)
-        print("\nDemo completed successfully!")
-        print("You're ready to win the hackathon!")
-        return 0
-    else:
-        print("\nDemo failed. Check the error messages above.")
-        return 1
+    # Start integrated demo with voice
+    emergency_voice.voice.announce_template('watsonx_startup')
+    
+    # Judge interaction loop
+    while True:
+        print("\n🎤 NATURAL LANGUAGE DEMO READY")
+        print("Say: 'Trigger earthquake in San Francisco' or 'Show system status'")
+        
+        command = input("\n🎯 Judge Command: ").strip()
+        
+        if command.lower() in ['quit', 'exit', 'done']:
+            emergency_voice.voice.announce("Demo complete. Thank you judges.")
+            break
+            
+        if command:
+            # Process through integrated system
+            response = await enhanced_orchestrator.process_judge_command(command)
+            
+            # Voice announcement of response
+            emergency_voice.voice.announce(response.get('spoken_response', 'Command processed'))
+            
+            # If scenario was triggered, show results
+            if 'execution_result' in response:
+                result = response['execution_result']
+                
+                # Voice announces the big impact
+                lives = result.get('system_performance', {}).get('estimated_lives_protected', 0)
+                economic = result.get('system_performance', {}).get('economic_loss_prevented', 0)
+                
+                emergency_voice.announce_completion(
+                    lives_protected=lives,
+                    response_time=result.get('response_metadata', {}).get('total_response_time_seconds', 0),
+                    economic_impact=economic / 1000000000  # Convert to billions
+                )
+    
+    return 0
 
 if __name__ == "__main__":
     try:
-        sys.exit(asyncio.run(main()))
+        # Force use of enhanced demo - no fallbacks!
+        sys.exit(asyncio.run(enhanced_main_for_judges()))
     except KeyboardInterrupt:
         print("\nDemo interrupted by user")
         sys.exit(0)
     except Exception as e:
-        print(f"\nUnexpected error: {e}")
-        import traceback
-        traceback.print_exc()
+        print(f"\nDemo startup error: {e}")
+        print("Check your .env file and try again")
         sys.exit(1)

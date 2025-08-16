@@ -33,6 +33,26 @@ else:
 # Optional API keys
 OPENWEATHER_API_KEY = os.getenv('OPENWEATHER_API_KEY')
 
+# Enhanced watsonx.ai model configuration for hackathon
+ENHANCED_WATSONX_MODELS = {
+    'decision_model': 'ibm/granite-3-2-8b-instruct',      # Primary decisions
+    'strategy_model': 'ibm/granite-3-8b-instruct',        # Complex analysis  
+    'guardian_model': 'ibm/granite-guardian-3-8b',        # Safety validation
+    'vision_model': 'ibm/granite-vision-3-2-2b',          # Satellite imagery
+    'code_model': 'ibm/granite-8b-code-instruct',         # Automation scripts
+    'quick_model': 'ibm/granite-3-2b-instruct'            # Fast responses
+}
+
+# Judge demonstration settings
+JUDGE_DEMO_CONFIG = {
+    'voice_enabled': True,
+    'multi_model_showcase': True,
+    'orchestrate_workflows': True,
+    'predictive_analytics': True,
+    'conversation_ai': True,
+    'presentation_mode': True
+}
+
 # Default Demo Scenarios
 SCENARIOS = {
     'san_francisco': {
