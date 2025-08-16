@@ -1,33 +1,51 @@
 import requests
 import json
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, UTC
 
 def test_usgs_earthquakes():
     """Test USGS earthquake API"""
     url = "https://earthquake.usgs.gov/fdsnws/event/1/query"
-    
-    # San Francisco Bay Area
+
+    # San Francisco Bay Area bounds
+    minlon, minlat, maxlon, maxlat = -122.5, 37.0, -121.5, 38.0
+
+    start = (datetime.now(UTC) - timedelta(days=7)).strftime("%Y-%m-%dT%H:%M:%SZ")
+    end   = datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
+
     params = {
-        'format': 'geojson',
-        'starttime': (datetime.utcnow() - timedelta(days=7)).isoformat(),
-        'minmagnitude': 2.0,
-        'bbox': '-122.5,37.0,-121.5,38.0'  # SF Bay Area
+        "format": "geojson",
+        "starttime": start,
+        "endtime": end,
+        "minmagnitude": 2.0,
+        "minlatitude": minlat,
+        "maxlatitude": maxlat,
+        "minlongitude": minlon,
+        "maxlongitude": maxlon,
+        "orderby": "time-asc",  # or "time" for desc
+        "limit": 50
     }
-    
+
     try:
         response = requests.get(url, params=params, timeout=30)
         response.raise_for_status()
         data = response.json()
-        
-        print(f"✅ USGS API: Found {len(data['features'])} earthquakes")
-        if data['features']:
-            eq = data['features'][0]['properties']
-            print(f"   Latest: M{eq['mag']} - {eq['place']}")
+
+        feats = data.get("features", [])
+        print(f"✅ USGS API: Found {len(feats)} earthquakes")
+        if feats:
+            latest = feats[-1]["properties"]  # last if time-asc
+            print(f"   Latest: M{latest['mag']} - {latest['place']}")
+
         return True
-        
+
+    except requests.HTTPError as e:
+        # Print server message to quickly see what param it didn’t like
+        print(f"❌ USGS API Error: {e} | Body: {getattr(e.response, 'text', '')[:300]}")
+        return False
     except Exception as e:
         print(f"❌ USGS API Error: {e}")
         return False
+
 
 def test_noaa_weather():
     """Test NOAA weather API"""
@@ -57,7 +75,7 @@ def test_nasa_worldview():
         base_url = "https://wvs.earthdata.nasa.gov/api/v1/snapshot"
         params = {
             'REQUEST': 'GetSnapshot',
-            'TIME': datetime.utcnow().strftime("%Y-%m-%d"),
+            'TIME': datetime.now(UTC).strftime("%Y-%m-%d"),
             'BBOX': '-122.75,37.25,-122.25,37.75',  # SF area
             'CRS': 'EPSG:4326',
             'LAYERS': 'MODIS_Terra_CorrectedReflectance_TrueColor',

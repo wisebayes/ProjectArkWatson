@@ -1,0 +1,1449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DisasterShield - Autonomous Crisis Response Nexus</title>
+    
+    <!-- External Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Inter', sans-serif;
+        }
+        
+        :root {
+            --primary-blue: #1e3c72;
+            --secondary-blue: #2a5298;
+            --accent-orange: #ff6b35;
+            --success-green: #4caf50;
+            --warning-orange: #ff9800;
+            --danger-red: #f44336;
+            --dark-bg: #0f1419;
+            --card-bg: rgba(255, 255, 255, 0.1);
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.8);
+            --border-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        body {
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-blue) 50%, #1a365d 100%);
+            color: var(--text-primary);
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        /* Animated background particles */
+        .bg-particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        .particle {
+            position: absolute;
+            background: var(--accent-orange);
+            border-radius: 50%;
+            opacity: 0.1;
+            animation: float 20s infinite linear;
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(100vh) translateX(0px); opacity: 0; }
+            10% { opacity: 0.1; }
+            90% { opacity: 0.1; }
+            100% { transform: translateY(-100px) translateX(100px); opacity: 0; }
+        }
+        
+        /* Header */
+        .header {
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(20px);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--accent-orange);
+            position: relative;
+            z-index: 100;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--accent-orange), #ff8c42);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
+        }
+        
+        .logo-text {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .logo-title {
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--text-primary), var(--accent-orange));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .logo-subtitle {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+        
+        .system-status {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+        
+        .alert-level {
+            padding: 0.75rem 1.5rem;
+            border-radius: 25px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            animation: pulse-glow 2s infinite;
+            box-shadow: 0 4px 15px rgba(255, 71, 87, 0.4);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .alert-critical {
+            background: linear-gradient(135deg, var(--danger-red), #d32f2f);
+            color: white;
+        }
+        
+        .alert-high {
+            background: linear-gradient(135deg, #ff6b35, #ff8c42);
+            color: white;
+        }
+        
+        .alert-medium {
+            background: linear-gradient(135deg, var(--warning-orange), #ffb74d);
+            color: white;
+        }
+        
+        .alert-low {
+            background: linear-gradient(135deg, var(--success-green), #66bb6a);
+            color: white;
+        }
+        
+        @keyframes pulse-glow {
+            0%, 100% { transform: scale(1); box-shadow: 0 4px 15px rgba(255, 71, 87, 0.4); }
+            50% { transform: scale(1.05); box-shadow: 0 6px 25px rgba(255, 71, 87, 0.6); }
+        }
+        
+        .status-metrics {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+            font-size: 0.85rem;
+        }
+        
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--success-green);
+            animation: pulse-dot 1.5s infinite;
+        }
+        
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+        
+        /* Main Layout */
+        .main-container {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            height: calc(100vh - 80px);
+            gap: 1rem;
+            padding: 1rem;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .map-section {
+            background: var(--glass-bg);
+            border-radius: 20px;
+            padding: 1.5rem;
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-color);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .map-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .map-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        
+        .map-controls {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .map-btn {
+            padding: 0.5rem 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .map-btn:hover {
+            background: var(--accent-orange);
+            transform: translateY(-2px);
+        }
+        
+        .map-btn.active {
+            background: var(--accent-orange);
+            box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
+        }
+        
+        #map {
+            height: calc(100% - 60px);
+            border-radius: 15px;
+            box-shadow: inset 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* Control Panel */
+        .control-panel {
+            display: grid;
+            grid-template-rows: auto auto 1fr;
+            gap: 1rem;
+        }
+        
+        .panel-card {
+            background: var(--glass-bg);
+            border-radius: 16px;
+            padding: 1.5rem;
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-color);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .panel-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-orange), #ff8c42);
+        }
+        
+        .panel-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+        }
+        
+        .panel-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 1.25rem;
+            color: var(--accent-orange);
+        }
+        
+        .panel-icon {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* Agent Status */
+        .agent-grid {
+            display: grid;
+            gap: 1rem;
+        }
+        
+        .agent-status {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .agent-status:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateX(5px);
+        }
+        
+        .agent-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .agent-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            position: relative;
+        }
+        
+        .agent-indicator::after {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            border-radius: 50%;
+            opacity: 0.5;
+            animation: ripple 2s infinite;
+        }
+        
+        .status-active {
+            background: var(--success-green);
+        }
+        
+        .status-active::after {
+            border: 2px solid var(--success-green);
+        }
+        
+        .status-processing {
+            background: var(--warning-orange);
+        }
+        
+        .status-processing::after {
+            border: 2px solid var(--warning-orange);
+        }
+        
+        .status-alert {
+            background: var(--danger-red);
+        }
+        
+        .status-alert::after {
+            border: 2px solid var(--danger-red);
+        }
+        
+        @keyframes ripple {
+            0% { transform: scale(1); opacity: 0.5; }
+            100% { transform: scale(2); opacity: 0; }
+        }
+        
+        .agent-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        
+        .agent-task {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-top: 0.25rem;
+        }
+        
+        .agent-metrics {
+            text-align: right;
+            font-size: 0.8rem;
+        }
+        
+        .agent-value {
+            font-weight: 700;
+            color: var(--accent-orange);
+        }
+        
+        /* AI Insights */
+        .ai-insight {
+            background: rgba(103, 58, 183, 0.1);
+            border: 1px solid rgba(103, 58, 183, 0.3);
+            border-radius: 12px;
+            padding: 1.25rem;
+            margin: 1rem 0;
+            position: relative;
+        }
+        
+        .ai-insight::before {
+            content: '🧠';
+            position: absolute;
+            top: -10px;
+            left: 15px;
+            background: var(--glass-bg);
+            padding: 0.25rem 0.5rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
+        }
+        
+        .insight-header {
+            color: #9c27b0;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            font-size: 0.9rem;
+        }
+        
+        .insight-content {
+            font-size: 0.85rem;
+            line-height: 1.5;
+            color: var(--text-secondary);
+        }
+        
+        /* Metrics Grid */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 1.25rem;
+        }
+        
+        .metric-card {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 1.25rem;
+            border-radius: 12px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .metric-card:hover {
+            background: rgba(255, 107, 53, 0.1);
+            border-color: var(--accent-orange);
+            transform: scale(1.05);
+        }
+        
+        .metric-value {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: var(--accent-orange);
+            margin-bottom: 0.5rem;
+            text-shadow: 0 2px 10px rgba(255, 107, 53, 0.3);
+        }
+        
+        .metric-label {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .metric-change {
+            font-size: 0.7rem;
+            margin-top: 0.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.25rem;
+        }
+        
+        .metric-up {
+            color: var(--success-green);
+        }
+        
+        .metric-down {
+            color: var(--danger-red);
+        }
+        
+        /* Evacuation Routes */
+        .evacuation-route {
+            background: rgba(76, 175, 80, 0.1);
+            border: 2px solid rgba(76, 175, 80, 0.4);
+            border-radius: 12px;
+            padding: 1rem;
+            margin: 0.75rem 0;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .evacuation-route::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 2s ease;
+        }
+        
+        .evacuation-route:hover::before {
+            left: 100%;
+        }
+        
+        .evacuation-route:hover {
+            border-color: var(--success-green);
+            background: rgba(76, 175, 80, 0.15);
+            transform: translateX(5px);
+        }
+        
+        .route-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 700;
+            color: var(--success-green);
+            margin-bottom: 0.5rem;
+        }
+        
+        .route-id {
+            font-size: 0.9rem;
+        }
+        
+        .route-capacity {
+            font-size: 0.8rem;
+            background: rgba(76, 175, 80, 0.2);
+            padding: 0.25rem 0.5rem;
+            border-radius: 6px;
+        }
+        
+        .route-details {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            line-height: 1.4;
+        }
+        
+        .route-status {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 0.5rem;
+            font-size: 0.8rem;
+        }
+        
+        .route-safety {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        
+        .safety-high {
+            color: var(--success-green);
+        }
+        
+        .safety-medium {
+            color: var(--warning-orange);
+        }
+        
+        /* Communication Panel */
+        .alert-message {
+            background: rgba(255, 107, 53, 0.1);
+            border: 2px solid rgba(255, 107, 53, 0.3);
+            border-radius: 12px;
+            padding: 1.25rem;
+            margin: 1rem 0;
+            position: relative;
+        }
+        
+        .alert-message::before {
+            content: '📢';
+            position: absolute;
+            top: -8px;
+            left: 15px;
+            background: var(--glass-bg);
+            padding: 0.25rem 0.5rem;
+            border-radius: 6px;
+        }
+        
+        .message-type {
+            font-weight: 700;
+            color: var(--accent-orange);
+            margin-bottom: 0.75rem;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .message-content {
+            font-size: 0.9rem;
+            line-height: 1.5;
+            color: var(--text-primary);
+        }
+        
+        /* Response Timeline */
+        .timeline-container {
+            max-height: 300px;
+            overflow-y: auto;
+            padding-right: 0.5rem;
+        }
+        
+        .timeline-container::-webkit-scrollbar {
+            width: 4px;
+        }
+        
+        .timeline-container::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+        }
+        
+        .timeline-container::-webkit-scrollbar-thumb {
+            background: var(--accent-orange);
+            border-radius: 2px;
+        }
+        
+        .timeline-item {
+            display: flex;
+            align-items: flex-start;
+            margin: 1rem 0;
+            padding: 1rem;
+            border-radius: 10px;
+            background: rgba(0, 0, 0, 0.1);
+            border-left: 4px solid var(--accent-orange);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .timeline-item:hover {
+            background: rgba(255, 107, 53, 0.1);
+            transform: translateX(5px);
+        }
+        
+        .timeline-time {
+            min-width: 60px;
+            color: var(--accent-orange);
+            font-weight: 700;
+            font-size: 0.8rem;
+            margin-right: 1rem;
+        }
+        
+        .timeline-content {
+            flex: 1;
+        }
+        
+        .timeline-action {
+            font-size: 0.9rem;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+            font-weight: 600;
+        }
+        
+        .timeline-agencies {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+        
+        .timeline-status {
+            position: absolute;
+            right: 1rem;
+            top: 1rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 6px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .status-completed {
+            background: rgba(76, 175, 80, 0.2);
+            color: var(--success-green);
+        }
+        
+        .status-in-progress {
+            background: rgba(255, 152, 0, 0.2);
+            color: var(--warning-orange);
+        }
+        
+        .status-pending {
+            background: rgba(158, 158, 158, 0.2);
+            color: #9e9e9e;
+        }
+        
+        /* Statistics Panel */
+        .stats-overview {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .stat-item {
+            text-align: center;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .stat-number {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--accent-orange);
+            margin-bottom: 0.25rem;
+        }
+        
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .main-container {
+                grid-template-columns: 1fr;
+                grid-template-rows: 1fr auto;
+            }
+            
+            .control-panel {
+                grid-template-columns: 1fr 1fr 1fr;
+                grid-template-rows: auto;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .header {
+                padding: 1rem;
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .logo-title {
+                font-size: 1.4rem;
+            }
+            
+            .control-panel {
+                grid-template-columns: 1fr;
+            }
+            
+            .metrics-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* Loading and Animation Effects */
+        .loading-shimmer {
+            background: linear-gradient(90deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.2) 50%, rgba(255, 255, 255, 0.1) 100%);
+            background-size: 200% 100%;
+            animation: shimmer 2s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+        
+        /* Data Visualization Enhancements */
+        .data-point {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            background: rgba(255, 107, 53, 0.2);
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--accent-orange);
+            margin: 0.25rem;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            overflow: hidden;
+            margin: 0.5rem 0;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-orange), #ff8c42);
+            border-radius: 3px;
+            transition: width 1s ease;
+            animation: progress-glow 2s infinite;
+        }
+        
+        @keyframes progress-glow {
+            0%, 100% { box-shadow: 0 0 5px rgba(255, 107, 53, 0.5); }
+            50% { box-shadow: 0 0 15px rgba(255, 107, 53, 0.8); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="bg-particles" id="particles"></div>
+    
+    <!-- Header -->
+    <div class="header">
+        <div class="logo">
+            <div class="logo-icon">
+                <i class="fas fa-shield-alt"></i>
+            </div>
+            <div class="logo-text">
+                <div class="logo-title">DisasterShield</div>
+                <div class="logo-subtitle">Autonomous Crisis Response Nexus</div>
+            </div>
+        </div>
+        <div class="system-status">
+            <div class="alert-level alert-high" id="alertLevel">
+                <i class="fas fa-exclamation-triangle"></i>
+                THREAT LEVEL: HIGH
+            </div>
+            <div class="status-metrics">
+                <div class="status-item">
+                    <div class="status-dot"></div>
+                    <span>Agents Active: <strong id="agentsActive">3/3</strong></span>
+                </div>
+                <div class="status-item">
+                    <div class="status-dot"></div>
+                    <span>Response Time: <strong id="responseTime">45s</strong></span>
+                </div>
+                <div class="status-item">
+                    <div class="status-dot"></div>
+                    <span>Population Reach: <strong id="populationReach">95.2%</strong></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-container">
+        <!-- Map Section -->
+        <div class="map-section">
+            <div class="map-header">
+                <div class="map-title">
+                    <i class="fas fa-globe-americas"></i>
+                    Real-Time Situation Awareness
+                </div>
+                <div class="map-controls">
+                    <button class="map-btn active" data-layer="threats">
+                        <i class="fas fa-exclamation-triangle"></i> Threats
+                    </button>
+                    <button class="map-btn" data-layer="resources">
+                        <i class="fas fa-ambulance"></i> Resources
+                    </button>
+                    <button class="map-btn" data-layer="evacuation">
+                        <i class="fas fa-route"></i> Evacuation
+                    </button>
+                    <button class="map-btn" data-layer="satellite">
+                        <i class="fas fa-satellite"></i> Satellite
+                    </button>
+                </div>
+            </div>
+            <div id="map"></div>
+        </div>
+
+        <!-- Control Panel -->
+        <div class="control-panel">
+            <!-- Threat Detection Panel -->
+            <div class="panel-card">
+                <div class="panel-header">
+                    <div class="panel-icon">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    Threat Detection Agent
+                </div>
+                
+                <div class="agent-grid">
+                    <div class="agent-status">
+                        <div class="agent-info">
+                            <div class="agent-indicator status-alert"></div>
+                            <div>
+                                <div class="agent-name">Seismic Activity Monitor</div>
+                                <div class="agent-task">Analyzing M6.2 earthquake patterns</div>
+                            </div>
+                        </div>
+                        <div class="agent-metrics">
+                            <div class="agent-value">6.2</div>
+                            <div>Magnitude</div>
+                        </div>
+                    </div>
+                    
+                    <div class="agent-status">
+                        <div class="agent-info">
+                            <div class="agent-indicator status-processing"></div>
+                            <div>
+                                <div class="agent-name">Weather Pattern Analysis</div>
+                                <div class="agent-task">Processing NOAA alerts</div>
+                            </div>
+                        </div>
+                        <div class="agent-metrics">
+                            <div class="agent-value">3</div>
+                            <div>Alerts</div>
+                        </div>
+                    </div>
+                    
+                    <div class="agent-status">
+                        <div class="agent-info">
+                            <div class="agent-indicator status-active"></div>
+                            <div>
+                                <div class="agent-name">Satellite Imagery Scan</div>
+                                <div class="agent-task">NASA Worldview analysis complete</div>
+                            </div>
+                        </div>
+                        <div class="agent-metrics">
+                            <div class="agent-value">250m</div>
+                            <div>Resolution</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="ai-insight">
+                    <div class="insight-header">IBM watsonx.ai Analysis</div>
+                    <div class="insight-content">
+                        M6.2 earthquake detected 15km NE of San Francisco. Granite model predicts 85% aftershock probability. Infrastructure damage likely in Financial District. Tsunami risk: LOW. Coordinating autonomous response protocols.
+                    </div>
+                </div>
+                
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-value" id="threatCount">4</div>
+                        <div class="metric-label">Active Threats</div>
+                        <div class="metric-change metric-up">
+                            <i class="fas fa-arrow-up"></i> +2 detected
+                        </div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value" id="confidenceLevel">87%</div>
+                        <div class="metric-label">AI Confidence</div>
+                        <div class="metric-change metric-up">
+                            <i class="fas fa-arrow-up"></i> +5% accuracy
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Resource Orchestration Panel -->
+            <div class="panel-card">
+                <div class="panel-header">
+                    <div class="panel-icon">
+                        <i class="fas fa-cogs"></i>
+                    </div>
+                    Resource Orchestration Agent
+                </div>
+                
+                <div class="stats-overview">
+                    <div class="stat-item">
+                        <div class="stat-number" id="resourceEfficiency">85%</div>
+                        <div class="stat-label">Resource Efficiency</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 85%"></div>
+                        </div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="responseTime">18min</div>
+                        <div class="stat-label">Avg Response Time</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 70%"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="evacuation-route">
+                    <div class="route-header">
+                        <span class="route-id">EVAC Route Alpha</span>
+                        <span class="route-capacity">5,000 capacity</span>
+                    </div>
+                    <div class="route-details">
+                        Downtown Financial → Shelter North (25 min)
+                    </div>
+                    <div class="route-status">
+                        <div class="route-safety safety-high">
+                            <i class="fas fa-shield-alt"></i> HIGH Safety Rating
+                        </div>
+                        <div>
+                            <span class="data-point">ACTIVE</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="evacuation-route">
+                    <div class="route-header">
+                        <span class="route-id">EVAC Route Beta</span>
+                        <span class="route-capacity">3,500 capacity</span>
+                    </div>
+                    <div class="route-details">
+                        Mission District → Shelter South (18 min)
+                    </div>
+                    <div class="route-status">
+                        <div class="route-safety safety-medium">
+                            <i class="fas fa-exclamation-triangle"></i> MEDIUM Safety Rating
+                        </div>
+                        <div>
+                            <span class="data-point">STANDBY</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="ai-insight">
+                    <div class="insight-header">Optimization Results</div>
+                    <div class="insight-content">
+                        Granite AI optimized evacuation for 875K population. Route Alpha prioritized for structural safety. Resource deployment achieves 85% efficiency with 18-minute average response time.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Emergency Communication Panel -->
+            <div class="panel-card">
+                <div class="panel-header">
+                    <div class="panel-icon">
+                        <i class="fas fa-broadcast-tower"></i>
+                    </div>
+                    Emergency Communication Agent
+                </div>
+                
+                <div class="alert-message">
+                    <div class="message-type">IMMEDIATE ALERT (SMS)</div>
+                    <div class="message-content">
+                        🚨 EARTHQUAKE M6.2 - EVACUATE NOW via Route Alpha (Downtown→North). Move quickly, stay calm. Reply SAFE when secure. #DisasterShield
+                    </div>
+                </div>
+                
+                <div class="stats-overview">
+                    <div class="stat-item">
+                        <div class="stat-number" id="messagesDelivered">185K</div>
+                        <div class="stat-label">Messages Delivered</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="deliveryRate">98.3%</div>
+                        <div class="stat-label">Delivery Success</div>
+                    </div>
+                </div>
+                
+                <div class="ai-insight">
+                    <div class="insight-header">Communication Status</div>
+                    <div class="insight-content">
+                        Multi-channel deployment active: 185K citizens reached across SMS, push notifications, emergency broadcast, and social media. Agency coordination established on secure frequencies.
+                    </div>
+                </div>
+                
+                <div class="timeline-container">
+                    <div style="font-weight: 600; margin-bottom: 1rem; color: var(--accent-orange);">
+                        <i class="fas fa-clock"></i> Response Timeline
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-time">+0min</div>
+                        <div class="timeline-content">
+                            <div class="timeline-action">Autonomous threat detection complete</div>
+                            <div class="timeline-agencies">DisasterShield AI, Emergency Operations Center</div>
+                        </div>
+                        <div class="timeline-status status-completed">COMPLETED</div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-time">+2min</div>
+                        <div class="timeline-content">
+                            <div class="timeline-action">Multi-agency coordination initiated</div>
+                            <div class="timeline-agencies">Fire, Police, EMS, Emergency Management</div>
+                        </div>
+                        <div class="timeline-status status-in-progress">IN PROGRESS</div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-time">+5min</div>
+                        <div class="timeline-content">
+                            <div class="timeline-action">First responders dispatched</div>
+                            <div class="timeline-agencies">Fire Department, Urban Search & Rescue</div>
+                        </div>
+                        <div class="timeline-status status-in-progress">IN PROGRESS</div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-time">+15min</div>
+                        <div class="timeline-content">
+                            <div class="timeline-action">Evacuation routes activated</div>
+                            <div class="timeline-agencies">Police, Department of Transportation</div>
+                        </div>
+                        <div class="timeline-status status-pending">PENDING</div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-time">+30min</div>
+                        <div class="timeline-content">
+                            <div class="timeline-action">Emergency shelters operational</div>
+                            <div class="timeline-agencies">Emergency Management, Red Cross</div>
+                        </div>
+                        <div class="timeline-status status-pending">PENDING</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Map
+        const map = L.map('map').setView([37.7749, -122.4194], 11);
+        
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors',
+            opacity: 0.8
+        }).addTo(map);
+        
+        // Custom map styling for dark theme
+        const mapElement = document.getElementById('map');
+        mapElement.style.filter = 'invert(1) hue-rotate(180deg) brightness(0.8) contrast(1.2)';
+        
+        // Add earthquake epicenter
+        const earthquakeIcon = L.divIcon({
+            className: 'earthquake-marker',
+            html: `
+                <div style="
+                    background: radial-gradient(circle, #ff4757, #ff3742);
+                    width: 30px; height: 30px; border-radius: 50%;
+                    border: 4px solid rgba(255, 255, 255, 0.8);
+                    animation: seismic-pulse 2s infinite;
+                    display: flex; align-items: center; justify-content: center;
+                    color: white; font-weight: bold; font-size: 12px;
+                    box-shadow: 0 0 20px rgba(255, 71, 87, 0.6);
+                ">6.2</div>
+                <style>
+                    @keyframes seismic-pulse {
+                        0%, 100% { transform: scale(1); }
+                        50% { transform: scale(1.3); }
+                    }
+                </style>
+            `,
+            iconSize: [30, 30],
+            iconAnchor: [15, 15]
+        });
+        
+        const epicenter = L.marker([37.8749, -122.3194], {icon: earthquakeIcon})
+            .addTo(map)
+            .bindPopup(`
+                <div style="color: #333; font-family: inherit;">
+                    <h3 style="margin: 0 0 10px 0; color: #ff4757;">Earthquake Epicenter</h3>
+                    <p><strong>Magnitude:</strong> 6.2</p>
+                    <p><strong>Depth:</strong> 8.5km</p>
+                    <p><strong>Time:</strong> 08:30 AM PST</p>
+                    <p><strong>Fault:</strong> San Andreas System</p>
+                </div>
+            `);
+        
+        // Add evacuation routes with enhanced styling
+        const routes = [
+            {
+                path: [[37.7749, -122.4194], [37.8049, -122.4094], [37.8349, -122.3994]],
+                color: '#4caf50',
+                name: 'Evacuation Route Alpha',
+                capacity: '5,000',
+                time: '25 min'
+            },
+            {
+                path: [[37.7549, -122.3994], [37.7349, -122.3794], [37.7149, -122.3594]],
+                color: '#ff9800',
+                name: 'Evacuation Route Beta',
+                capacity: '3,500',
+                time: '18 min'
+            }
+        ];
+        
+        routes.forEach(route => {
+            L.polyline(route.path, {
+                color: route.color,
+                weight: 6,
+                opacity: 0.8,
+                className: 'evacuation-route-line'
+            }).addTo(map)
+            .bindPopup(`
+                <div style="color: #333; font-family: inherit;">
+                    <h3 style="margin: 0 0 10px 0; color: ${route.color};">${route.name}</h3>
+                    <p><strong>Capacity:</strong> ${route.capacity}</p>
+                    <p><strong>Travel Time:</strong> ${route.time}</p>
+                    <p><strong>Status:</strong> ACTIVE</p>
+                </div>
+            `);
+        });
+        
+        // Add emergency shelters
+        const shelterIcon = L.divIcon({
+            className: 'shelter-marker',
+            html: `
+                <div style="
+                    background: linear-gradient(135deg, #4caf50, #66bb6a);
+                    color: white; padding: 4px 8px; border-radius: 6px;
+                    font-weight: bold; font-size: 12px;
+                    box-shadow: 0 4px 15px rgba(76, 175, 80, 0.4);
+                    border: 2px solid rgba(255, 255, 255, 0.8);
+                ">🏠 SHELTER</div>
+            `,
+            iconSize: [80, 25],
+            iconAnchor: [40, 12]
+        });
+        
+        const shelters = [
+            { pos: [37.8349, -122.3994], name: 'Emergency Shelter North', capacity: '5,000' },
+            { pos: [37.7149, -122.3594], name: 'Emergency Shelter South', capacity: '3,500' }
+        ];
+        
+        shelters.forEach(shelter => {
+            L.marker(shelter.pos, {icon: shelterIcon})
+                .addTo(map)
+                .bindPopup(`
+                    <div style="color: #333; font-family: inherit;">
+                        <h3 style="margin: 0 0 10px 0; color: #4caf50;">${shelter.name}</h3>
+                        <p><strong>Capacity:</strong> ${shelter.capacity}</p>
+                        <p><strong>Status:</strong> ACTIVE & READY</p>
+                        <p><strong>Facilities:</strong> Medical, Food, Communications</p>
+                    </div>
+                `);
+        });
+        
+        // Add affected area overlay
+        const affectedArea = L.circle([37.7749, -122.4194], {
+            color: '#ff4757',
+            fillColor: '#ff4757',
+            fillOpacity: 0.15,
+            radius: 15000,
+            weight: 2,
+            opacity: 0.6
+        }).addTo(map);
+        
+        affectedArea.bindPopup(`
+            <div style="color: #333; font-family: inherit;">
+                <h3 style="margin: 0 0 10px 0; color: #ff4757;">High Risk Zone</h3>
+                <p><strong>Population:</strong> 875,000</p>
+                <p><strong>Risk Level:</strong> HIGH</p>
+                <p><strong>Primary Concerns:</strong> Building damage, infrastructure failure</p>
+            </div>
+        `);
+        
+        // Add emergency facilities
+        const facilities = [
+            { pos: [37.7849, -122.4094], type: 'hospital', name: 'UCSF Medical Center' },
+            { pos: [37.7649, -122.4294], type: 'fire', name: 'SFFD Station 1' },
+            { pos: [37.7949, -122.3994], type: 'police', name: 'SFPD Central Station' }
+        ];
+        
+        facilities.forEach(facility => {
+            const icons = {
+                hospital: '🏥',
+                fire: '🚒',
+                police: '👮'
+            };
+            
+            const colors = {
+                hospital: '#2196f3',
+                fire: '#f44336',
+                police: '#9c27b0'
+            };
+            
+            const facilityIcon = L.divIcon({
+                className: 'facility-marker',
+                html: `
+                    <div style="
+                        background: ${colors[facility.type]};
+                        border-radius: 50%; width: 25px; height: 25px;
+                        display: flex; align-items: center; justify-content: center;
+                        border: 3px solid white; font-size: 12px;
+                        box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+                    ">${icons[facility.type]}</div>
+                `,
+                iconSize: [25, 25],
+                iconAnchor: [12, 12]
+            });
+            
+            L.marker(facility.pos, {icon: facilityIcon})
+                .addTo(map)
+                .bindPopup(`
+                    <div style="color: #333; font-family: inherit;">
+                        <h3 style="margin: 0 0 10px 0; color: ${colors[facility.type]};">${facility.name}</h3>
+                        <p><strong>Type:</strong> ${facility.type.toUpperCase()}</p>
+                        <p><strong>Status:</strong> OPERATIONAL</p>
+                    </div>
+                `);
+        });
+        
+        // Map layer controls
+        document.querySelectorAll('.map-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.map-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                
+                const layer = this.dataset.layer;
+                // Here you would implement different layer visibility
+                console.log(`Switched to ${layer} layer`);
+            });
+        });
+        
+        // Real-time data simulation
+        function updateRealTimeData() {
+            // Update threat count
+            const threatCount = document.getElementById('threatCount');
+            const currentCount = parseInt(threatCount.textContent);
+            if (Math.random() > 0.8) {
+                threatCount.textContent = currentCount + Math.floor(Math.random() * 2);
+            }
+            
+            // Update response time
+            const responseTimeEl = document.getElementById('responseTime');
+            let responseTime = parseInt(responseTimeEl.textContent.replace('s', ''));
+            responseTime += Math.floor(Math.random() * 10) - 5;
+            responseTime = Math.max(30, Math.min(120, responseTime));
+            responseTimeEl.textContent = responseTime + 's';
+            
+            // Update resource efficiency
+            const efficiency = document.getElementById('resourceEfficiency');
+            let currentEff = parseInt(efficiency.textContent.replace('%', ''));
+            currentEff += Math.floor(Math.random() * 4) - 2;
+            currentEff = Math.max(75, Math.min(95, currentEff));
+            efficiency.textContent = currentEff + '%';
+            
+            // Update progress bars
+            document.querySelectorAll('.progress-fill').forEach(bar => {
+                const width = Math.max(60, Math.min(95, parseInt(bar.style.width) + Math.floor(Math.random() * 6) - 3));
+                bar.style.width = width + '%';
+            });
+        }
+        
+        // Update every 3 seconds for demo
+        setInterval(updateRealTimeData, 3000);
+        
+        // Agent status animation
+        function animateAgentStatus() {
+            const indicators = document.querySelectorAll('.agent-indicator');
+            indicators.forEach(indicator => {
+                if (Math.random() > 0.7) {
+                    const classes = ['status-active', 'status-processing', 'status-alert'];
+                    const currentClass = classes.find(cls => indicator.classList.contains(cls));
+                    const newClass = classes[Math.floor(Math.random() * classes.length)];
+                    
+                    if (currentClass !== newClass) {
+                        indicator.classList.remove(currentClass);
+                        indicator.classList.add(newClass);
+                    }
+                }
+            });
+        }
+        
+        setInterval(animateAgentStatus, 5000);
+        
+        // Background particles animation
+        function createParticles() {
+            const container = document.getElementById('particles');
+            
+            function addParticle() {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                
+                const size = Math.random() * 4 + 2;
+                particle.style.width = size + 'px';
+                particle.style.height = size + 'px';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+                particle.style.animationDelay = Math.random() * 5 + 's';
+                
+                container.appendChild(particle);
+                
+                setTimeout(() => {
+                    if (particle.parentNode) {
+                        particle.parentNode.removeChild(particle);
+                    }
+                }, 25000);
+            }
+            
+            // Add particles continuously
+            setInterval(addParticle, 2000);
+        }
+        
+        createParticles();
+        
+        // Simulate IBM watsonx.ai processing
+        function simulateAIProcessing() {
+            const insights = [
+                "Granite model processing seismic wave patterns...",
+                "AI predicting aftershock locations with 87% confidence...",
+                "Optimizing evacuation routes for maximum safety...",
+                "Cross-referencing weather data for compound risks...",
+                "Coordinating multi-agency response protocols...",
+                "Analyzing satellite imagery for infrastructure damage...",
+                "Calculating resource deployment efficiency...",
+                "Processing citizen safety confirmations..."
+            ];
+            
+            const aiElements = document.querySelectorAll('.insight-content');
+            
+            setInterval(() => {
+                if (Math.random() > 0.85) {
+                    const randomInsight = insights[Math.floor(Math.random() * insights.length)];
+                    const randomElement = aiElements[Math.floor(Math.random() * aiElements.length)];
+                    
+                    const originalText = randomElement.textContent;
+                    randomElement.textContent = randomInsight;
+                    randomElement.style.fontStyle = 'italic';
+                    randomElement.style.opacity = '0.7';
+                    
+                    setTimeout(() => {
+                        randomElement.textContent = originalText;
+                        randomElement.style.fontStyle = 'normal';
+                        randomElement.style.opacity = '1';
+                    }, 3000);
+                }
+            }, 8000);
+        }
+        
+        simulateAIProcessing();
+        
+        // Initialize demo
+        console.log('DisasterShield Dashboard Initialized');
+        console.log('IBM watsonx.ai Integration: ACTIVE');
+        console.log('Real-time Data Feeds: OPERATIONAL');
+        console.log('Multi-Agent Coordination: ENABLED');
+        
+        // Auto-update population reach
+        setInterval(() => {
+            const reachEl = document.getElementById('populationReach');
+            let reach = parseFloat(reachEl.textContent.replace('%', ''));
+            reach += (Math.random() - 0.5) * 0.5;
+            reach = Math.max(90, Math.min(98, reach));
+            reachEl.textContent = reach.toFixed(1) + '%';
+        }, 4000);
+        
+        // Demo completion notification
+        setTimeout(() => {
+            console.log('🏆 DEMO CYCLE COMPLETE - DisasterShield operating autonomously');
+            console.log('📊 Key Metrics: 1,400 lives protected, 95.2% population reach, 45s response time');
+            console.log('🚀 Ready for hackathon presentation!');
+        }, 2000);
+    </script>
+</body>
+</html>
