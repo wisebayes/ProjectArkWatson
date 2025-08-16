@@ -1,0 +1,18 @@
+2025-08-16 00:30:03,668 - __main__ - INFO - Production test session started: test_20250816_003003
+2025-08-16 00:30:03,668 - __main__ - INFO - Testing real API monitoring service
+2025-08-16 00:30:04,289 - src.monitoring.api_clients - ERROR - FEMA API error: 400
+2025-08-16 00:30:12,414 - __main__ - ERROR - WatsonX integration test failed: 1 validation error for WatsonxLLM
+  Value error, Did not find 'apikey' or 'token', please add an environment variable `WATSONX_APIKEY` or 'WATSONX_TOKEN' which contains it, or pass 'apikey' or 'token' as a named parameter. [type=value_error, input_value={'model_id': 'ibm/granite...p_k': 50, 'top_p': 0.9}}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/value_error
+2025-08-16 00:30:12,431 - src.workflows.detection_workflow - INFO - Workflow phase: monitoring, next action: poll_apis
+2025-08-16 00:30:12,431 - src.workflows.detection_workflow - ERROR - Workflow execution error: No synchronous function provided to "api_monitoring".
+Either initialize with a synchronous function or invoke via the async API (ainvoke, astream, etc.)
+2025-08-16 00:30:12,446 - src.workflows.planning_workflow - INFO - Planning phase: monitoring, next action: poll_apis
+2025-08-16 00:30:12,447 - src.workflows.planning_workflow - ERROR - Planning workflow execution error: No synchronous function provided to "load_planning_data".
+Either initialize with a synchronous function or invoke via the async API (ainvoke, astream, etc.)
+2025-08-16 00:30:12,450 - src.workflows.planning_workflow - INFO - Starting integrated disaster management cycle
+2025-08-16 00:30:12,450 - src.workflows.planning_workflow - INFO - Phase 1: Running disaster detection workflow
+2025-08-16 00:30:12,459 - src.workflows.detection_workflow - INFO - Workflow phase: monitoring, next action: poll_apis
+2025-08-16 00:30:12,459 - src.workflows.detection_workflow - ERROR - Workflow execution error: No synchronous function provided to "api_monitoring".
+Either initialize with a synchronous function or invoke via the async API (ainvoke, astream, etc.)
+2025-08-16 00:30:12,459 - src.workflows.planning_workflow - INFO - No planning workflow trigger - detection cycle complete

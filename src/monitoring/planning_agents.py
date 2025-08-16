@@ -29,7 +29,7 @@ class WatsonXPlanningOrchestrator:
     
     def __init__(
         self,
-        watsonx_api_key: str,
+        WATSONX_APIKEY: str,
         watsonx_url: str = "https://us-south.ml.cloud.ibm.com",
         project_id: str = None,
         model_id: str = "ibm/granite-13b-instruct-v2"

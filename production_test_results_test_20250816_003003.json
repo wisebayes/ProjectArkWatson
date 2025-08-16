@@ -1,0 +1,93 @@
+{
+  "session_id": "test_20250816_003003",
+  "start_time": "2025-08-16T00:30:03.668267",
+  "configuration": {
+    "watsonx_configured": true,
+    "redis_configured": true,
+    "debug_mode": true
+  },
+  "test_results": {
+    "api_monitoring": {
+      "test_name": "api_monitoring",
+      "start_time": "2025-08-16T00:30:03.668276",
+      "success": true,
+      "details": {
+        "total_sources": 5,
+        "successful_sources": 4,
+        "source_details": {
+          "usgs_earthquake": {
+            "success": true,
+            "alerts_count": 1,
+            "error": null
+          },
+          "noaa_weather": {
+            "success": true,
+            "alerts_count": 0,
+            "error": null
+          },
+          "fema_open": {
+            "success": false,
+            "alerts_count": 0,
+            "error": "FEMA API error: 400"
+          },
+          "nasa_worldview": {
+            "success": true,
+            "alerts_count": 0,
+            "error": null
+          },
+          "osm_overpass": {
+            "success": true,
+            "alerts_count": 2182,
+            "error": null
+          }
+        },
+        "total_alerts": 2183
+      },
+      "end_time": "2025-08-16T00:30:12.409512"
+    },
+    "watsonx_integration": {
+      "test_name": "watsonx_integration",
+      "start_time": "2025-08-16T00:30:12.410235",
+      "success": false,
+      "details": {
+        "error": "1 validation error for WatsonxLLM\n  Value error, Did not find 'apikey' or 'token', please add an environment variable `WATSONX_APIKEY` or 'WATSONX_TOKEN' which contains it, or pass 'apikey' or 'token' as a named parameter. [type=value_error, input_value={'model_id': 'ibm/granite...p_k': 50, 'top_p': 0.9}}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.11/v/value_error"
+      },
+      "end_time": "2025-08-16T00:30:12.415026"
+    },
+    "detection_workflow": {
+      "test_name": "detection_workflow",
+      "start_time": "2025-08-16T00:30:12.415040",
+      "success": false,
+      "details": {
+        "error": "No synchronous function provided to \"api_monitoring\".\nEither initialize with a synchronous function or invoke via the async API (ainvoke, astream, etc.)"
+      },
+      "end_time": "2025-08-16T00:30:12.431830"
+    },
+    "planning_workflow": {
+      "test_name": "planning_workflow",
+      "start_time": "2025-08-16T00:30:12.431841",
+      "success": false,
+      "details": {
+        "error": "No synchronous function provided to \"load_planning_data\".\nEither initialize with a synchronous function or invoke via the async API (ainvoke, astream, etc.)"
+      },
+      "end_time": "2025-08-16T00:30:12.447161"
+    },
+    "integrated_system": {
+      "test_name": "integrated_system",
+      "start_time": "2025-08-16T00:30:12.447173",
+      "success": false,
+      "details": {
+        "error": "No synchronous function provided to \"api_monitoring\".\nEither initialize with a synchronous function or invoke via the async API (ainvoke, astream, etc.)"
+      },
+      "end_time": "2025-08-16T00:30:12.459746"
+    }
+  },
+  "summary": {
+    "total_tests": 5,
+    "passed_tests": 1,
+    "failed_tests": 4,
+    "success_rate": 20.0,
+    "overall_success": false
+  },
+  "end_time": "2025-08-16T00:30:12.459756"
+}
