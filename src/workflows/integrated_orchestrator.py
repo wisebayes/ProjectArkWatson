@@ -16,8 +16,9 @@ from typing import Dict, Any, List
 
 import pandas as pd
 
-from ..core.state import ResponseTeam, PopulationZone
-from ..orchestrator.adapters import DetectionReActAdapter, PlanningPlanActAdapter
+from core.state import ResponseTeam, PopulationZone
+from orchestrator.adapters import DetectionReActAdapter, PlanningPlanActAdapter
+from notifications.notifier import send_slack_message
 
 
 logger = logging.getLogger(__name__)
@@ -35,6 +36,7 @@ class IntegratedOrchestratorManagement:
         monitoring_regions: List[Dict[str, Any]],
         session_id: str,
         config: Dict[str, Any] | None = None,
+        situation_description: str | None = None,
     ) -> Dict[str, Any]:
         """
         Run detection (ReAct) and planning (Plan-Act) using local adapters.
@@ -66,6 +68,7 @@ class IntegratedOrchestratorManagement:
             radius_km=radius_km,
             location_name=location_name,
             watsonx_config=watsonx_config,
+            situation_description=situation_description,
         )
 
         classification = detection.get("classification", {})
@@ -110,6 +113,7 @@ class IntegratedOrchestratorManagement:
 
         # Planning required
         logger.info("Orchestrator: running planning (Plan-Act)")
+        send_slack_message(f"ArkWatson: Planning triggered for {classification.get('disaster_type','unknown')} in {location_name} (severity: {severity_level})")
         teams, zones, centers = self._load_planning_inputs()
 
         planning = await self._planning.run(

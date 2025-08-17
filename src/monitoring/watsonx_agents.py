@@ -4,6 +4,7 @@ Uses LangChain tools with WatsonX models for intelligent analysis.
 """
 
 import json
+import os
 import logging
 from datetime import datetime
 from typing import Dict, List, Any, Optional
@@ -14,7 +15,7 @@ from langchain_ibm import WatsonxLLM
 from langchain_community.tools import DuckDuckGoSearchRun
 from langchain_community.utilities import DuckDuckGoSearchAPIWrapper
 
-from ..core.state import (
+from core.state import (
     DisasterType, SeverityLevel, AlertStatus, MonitoringData, 
     DisasterEvent, APISource
 )
@@ -33,7 +34,10 @@ class WatsonXDisasterClassifier:
         project_id: str = None,
         model_id: str = "ibm/granite-13b-instruct-v2"
     ):
-        """Initialize the WatsonX disaster classifier."""
+        """Initialize the WatsonX disaster classifier.
+
+        LLM client is created lazily to avoid auth errors when config is missing.
+        """
         self.watsonx_params = {
             "decoding_method": "sample",
             "max_new_tokens": 500,
@@ -42,13 +46,28 @@ class WatsonXDisasterClassifier:
             "top_k": 50,
             "top_p": 0.9,
         }
-        
-        self.watsonx_llm = WatsonxLLM(
-            model_id=model_id,
-            url=watsonx_url,
-            project_id=project_id,
-            params=self.watsonx_params,
-        )
+
+        # Defer LLM creation until first use to avoid triggering auth setup
+        self._watsonx_model_id = model_id
+        self._watsonx_url = watsonx_url
+        self._watsonx_project_id = project_id
+        self._watsonx_api_key = watsonx_api_key
+        self.watsonx_llm: Optional[WatsonxLLM] = None
+
+        def _make_llm() -> WatsonxLLM:
+            api_key = self._watsonx_api_key or os.environ.get("WATSONX_APIKEY")
+            kwargs = {
+                "model_id": self._watsonx_model_id,
+                "url": self._watsonx_url,
+                "params": self.watsonx_params,
+            }
+            if api_key:
+                kwargs["apikey"] = api_key
+            if self._watsonx_project_id:
+                kwargs["project_id"] = self._watsonx_project_id
+            return WatsonxLLM(**kwargs)  # type: ignore[arg-type]
+
+        self._create_watsonx_llm = _make_llm
         
         # Set up web search for confirmation
         search_wrapper = DuckDuckGoSearchAPIWrapper(
@@ -106,6 +125,10 @@ RESPOND WITH VALID JSON ONLY:
                 location_info=location_info
             )
             
+            # Ensure LLM is initialized lazily
+            if self.watsonx_llm is None:
+                self.watsonx_llm = self._create_watsonx_llm()
+
             # Get WatsonX classification
             response = await self.watsonx_llm.ainvoke(prompt)
             
@@ -221,9 +244,10 @@ RESPOND WITH VALID JSON ONLY:
 
 @tool(return_direct=True)
 def watsonx_disaster_classifier(
-    monitoring_data_json: str,
-    location_json: str,
-    watsonx_config: Dict[str, str]
+    monitoring_data_json: str = None,
+    location_json: str = None,
+    watsonx_config: Dict[str, str] = None,
+    situation_description: Optional[str] = None,
 ) -> str:
     """
     Classify monitoring data for disaster threats using IBM WatsonX.
@@ -250,18 +274,48 @@ def watsonx_disaster_classifier(
         )
         
         # Note: This tool function can't be async, so we'd need to handle this differently
-        # For now, return a template response
-        
-        return json.dumps({
+        # For now, return a template response with optional ongoing override
+
+        # Detect ongoing situation from prompt
+        ongoing = False
+        detected_type = "unknown"
+        if situation_description:
+            text = situation_description.lower()
+            ongoing = any(k in text for k in [
+                "ongoing", "currently", "happening now", "in progress", "actively", "right now"
+            ])
+            keyword_type_map = {
+                "earthquake": ["earthquake", "seismic", "aftershock"],
+                "wildfire": ["wildfire", "bushfire", "fire front", "forest fire"],
+                "flood": ["flood", "flooding", "inundation", "river overflow"],
+                "hurricane": ["hurricane", "cyclone", "typhoon"],
+                "tornado": ["tornado", "twister", "funnel cloud"],
+                "severe_weather": ["storm", "hail", "wind warning", "blizzard"],
+                "landslide": ["landslide", "mudslide"],
+            }
+            for dtype, keywords in keyword_type_map.items():
+                if any(k in text for k in keywords):
+                    detected_type = dtype
+                    break
+
+        response = {
             "threat_detected": True,
-            "disaster_type": "earthquake",
-            "confidence_score": 0.75,
-            "severity_level": "moderate",
-            "risk_factors": ["Template response from WatsonX tool"],
-            "recommendations": ["Monitor situation", "Prepare for potential confirmation"],
-            "requires_confirmation": True,
-            "reasoning": "This is a template response - implement async handling"
-        })
+            "disaster_type": detected_type if detected_type != "unknown" else "earthquake",
+            "confidence_score": 0.85 if ongoing else 0.75,
+            "severity_level": "high" if ongoing else "moderate",
+            "risk_factors": [
+                "Ongoing situation indicated in prompt" if ongoing else "Template response from WatsonX tool"
+            ],
+            "recommendations": [
+                "Activate response plan" if ongoing else "Monitor situation",
+                "Prepare evacuation procedures" if ongoing else "Prepare for potential confirmation"
+            ],
+            "requires_confirmation": False if ongoing else True,
+            "reasoning": "Ongoing override based on situation description" if ongoing else "This is a template response - implement async handling",
+        }
+        if ongoing:
+            response["ongoing"] = True
+        return json.dumps(response)
         
     except Exception as e:
         logger.error(f"WatsonX classifier tool error: {e}")

@@ -15,7 +15,7 @@ from langchain_core.tools import tool
 from langchain_core.prompts import PromptTemplate
 from langchain_ibm import WatsonxLLM
 
-from ..core.state import (
+from core.state import (
     ResponseTeam, PopulationZone, TeamDeployment, EvacuationRoute,
     DisasterType, SeverityLevel
 )

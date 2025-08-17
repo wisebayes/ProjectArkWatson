@@ -14,7 +14,7 @@ try:
 except ImportError:
     RedisSaver = None
 
-from ..core.state import DisasterDetectionState, create_initial_state
+from core.state import DisasterDetectionState, create_initial_state
 from .detection_nodes import (
     api_monitoring_node,
     data_analysis_node, 

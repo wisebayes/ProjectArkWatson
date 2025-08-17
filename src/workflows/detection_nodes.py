@@ -9,12 +9,12 @@ import logging
 from datetime import datetime, timedelta
 from typing import Dict, List, Any
 
-from ..core.state import (
+from core.state import (
     DisasterDetectionState, DisasterEvent, MonitoringData, 
     DisasterType, SeverityLevel, AlertStatus, SafeZone
 )
-from ..monitoring.api_clients import DisasterMonitoringService, predict_disaster_risk
-from ..monitoring.watsonx_agents import (
+from monitoring.api_clients import DisasterMonitoringService, predict_disaster_risk
+from monitoring.watsonx_agents import (
     watsonx_disaster_classifier, web_search_disaster_confirmation,
     severity_impact_analyzer, safe_zone_identifier
 )
@@ -195,7 +195,8 @@ async def watsonx_classification_node(state: DisasterDetectionState) -> Disaster
         classification_result = watsonx_disaster_classifier.invoke({
             "monitoring_data_json": monitoring_data_json,
             "location_json": location_json,
-            "watsonx_config": watsonx_config
+            "watsonx_config": watsonx_config,
+            # Situation description can be passed via state later if integrated
         })
         
         # Parse classification result
@@ -211,7 +212,7 @@ async def watsonx_classification_node(state: DisasterDetectionState) -> Disaster
         
         # Determine next action based on classification
         if classification["threat_detected"]:
-            if classification["requires_confirmation"]:
+            if classification.get("requires_confirmation") and not classification.get("ongoing", False):
                 updated_state["next_action"] = "web_search_confirmation"
             else:
                 updated_state["next_action"] = "severity_assessment"

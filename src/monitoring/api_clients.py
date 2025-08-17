@@ -17,7 +17,7 @@ import geopandas as gpd
 from shapely.geometry import Point, Polygon
 import geojson
 
-from ..core.state import APISource, MonitoringData, DisasterType
+from core.state import APISource, MonitoringData, DisasterType
 
 
 logger = logging.getLogger(__name__)

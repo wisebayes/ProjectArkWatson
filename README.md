@@ -20,3 +20,35 @@ Local adapters allow running the agent logic without the Orchestrator control pl
 
 These keep the current LangGraph flows intact while enabling progressive migration.
 
+## Orchestrator-Style Integrated Demo
+
+Run the local integrated flow:
+
+```bash
+python demo_orchestrator_integration.py --region "San Francisco Bay Area" --lat 37.7749 --lon -122.4194 --radius 100
+```
+
+To force planning for an ongoing event via prompt, pass a situation description containing ongoing keywords:
+
+```bash
+python demo_orchestrator_integration.py \
+  --region "San Francisco Bay Area" \
+  --lat 37.7749 --lon -122.4194 --radius 100 \
+  --situation "There is an ongoing wildfire impacting the East Bay currently"
+```
+
+## Dashboard
+
+A live dashboard is available using Streamlit:
+
+```bash
+streamlit run src/dashboard/app.py
+```
+
+It watches `integrated_demo_output/` for the latest `integrated_orchestrator_results_*.json` file and displays:
+
+- Classification and severity details
+- Live map of monitored region
+- Bubble chart of evacuation route capacity vs distance
+
+

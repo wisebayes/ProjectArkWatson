@@ -1,0 +1,53 @@
+{
+  "management_phase": "monitoring_only",
+  "planning_triggered": false,
+  "detection_summary": {
+    "event_detected": false,
+    "classification": {
+      "threat_detected": false,
+      "disaster_type": "unknown",
+      "confidence_score": 0.0,
+      "severity_level": "low",
+      "risk_factors": [
+        "Classification error: 1 validation error for WatsonxLLM\n  Value error, One of ['space_id', 'project_id'] parameters should be set.\nReason: None of the arguments were provided. [type=value_error, input_value={'model_id': 'ibm/granite...p_k': 50, 'top_p': 0.9}}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.11/v/value_error"
+      ],
+      "recommendations": [
+        "Check tool configuration"
+      ],
+      "requires_confirmation": false,
+      "reasoning": "Tool execution failed"
+    },
+    "severity": {
+      "severity_level": "high",
+      "severity_score": 0.5,
+      "severity_factors": {
+        "population": "High population at risk: 31,415,899",
+        "infrastructure": "Some critical facilities: 5",
+        "area": "Large affected area: 31415.9 km\u00b2"
+      },
+      "population_at_risk": 31415899,
+      "affected_area_km2": 31415.899999999998,
+      "critical_infrastructure_count": 5,
+      "impact_assessment": {
+        "immediate_risk": false,
+        "evacuation_needed": false,
+        "emergency_response_required": false
+      },
+      "recommendations": [
+        "Prepare evacuation plans",
+        "Alert emergency services",
+        "Monitor situation closely",
+        "Issue public advisories"
+      ],
+      "escalation_required": true,
+      "timestamp": "2025-08-16T18:24:17.700461"
+    },
+    "monitoring": {
+      "total_sources": 5,
+      "total_alerts": 3939,
+      "polled_at": "2025-08-16T18:24:17.643862"
+    }
+  },
+  "session_id": "orch_20250816_182408",
+  "timestamp": "2025-08-16T18:24:17.701671"
+}

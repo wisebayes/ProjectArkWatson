@@ -12,14 +12,14 @@ from typing import Dict, Any
 
 from langchain_core.tools import tool
 
-from ..monitoring.api_clients import DisasterMonitoringService, predict_disaster_risk
-from ..monitoring.watsonx_agents import (
+from monitoring.api_clients import DisasterMonitoringService, predict_disaster_risk
+from monitoring.watsonx_agents import (
     watsonx_disaster_classifier,
     web_search_disaster_confirmation,
     severity_impact_analyzer,
     safe_zone_identifier,
 )
-from ..monitoring.planning_agents import (
+from monitoring.planning_agents import (
     watsonx_team_deployment_optimizer,
     osrm_route_planner,
     evacuation_capacity_optimizer,
@@ -79,73 +79,151 @@ def poll_monitoring_sources(lat: float, lon: float, radius_km: float = 100) -> s
 # Re-export existing tools under Orchestrator-friendly names
 
 @tool(return_direct=True)
-def classify_disaster_with_watsonx(monitoring_data_json: str, location_json: str, watsonx_config: Dict[str, str]) -> str:
-    return watsonx_disaster_classifier(  # type: ignore
-        monitoring_data_json=monitoring_data_json,
-        location_json=location_json,
-        watsonx_config=watsonx_config,
-    )
+def classify_disaster_with_watsonx(monitoring_data_json: str, location_json: str, watsonx_config: Dict[str, str], situation_description: str | None = None) -> str:
+    """
+    Classify potential disasters using watsonx AI based on monitoring data.
+    
+    Args:
+        monitoring_data_json: JSON string containing monitoring signals
+        location_json: JSON string with location information
+        watsonx_config: Configuration dictionary for watsonx service
+        
+    Returns: JSON string with disaster classification results
+    """
+    return watsonx_disaster_classifier.invoke({  # type: ignore
+        "monitoring_data_json": monitoring_data_json,
+        "location_json": location_json,
+        "watsonx_config": watsonx_config,
+        "situation_description": situation_description or "",
+    })
 
 
 @tool(return_direct=True)
 def confirm_disaster_via_web(disaster_type: str, location_name: str, severity_level: str, time_window: str = "24h") -> str:
-    return web_search_disaster_confirmation(  # type: ignore
-        disaster_type=disaster_type,
-        location_name=location_name,
-        severity_level=severity_level,
-        time_window=time_window,
-    )
+    """
+    Confirm disaster occurrence through web search and news sources.
+    
+    Args:
+        disaster_type: Type of disaster to confirm
+        location_name: Name of the affected location
+        severity_level: Expected severity level
+        time_window: Time window for search (default: "24h")
+        
+    Returns: JSON string with confirmation results
+    """
+    return web_search_disaster_confirmation.invoke({  # type: ignore
+        "disaster_type": disaster_type,
+        "location_name": location_name,
+        "severity_level": severity_level,
+        "time_window": time_window,
+    })
 
 
 @tool(return_direct=True)
 def assess_severity(disaster_type: str, magnitude_or_intensity: str, affected_area_km2: float, population_density: int, critical_infrastructure_count: int) -> str:
-    return severity_impact_analyzer(  # type: ignore
-        disaster_type=disaster_type,
-        magnitude_or_intensity=magnitude_or_intensity,
-        affected_area_km2=affected_area_km2,
-        population_density=population_density,
-        critical_infrastructure_count=critical_infrastructure_count,
-    )
+    """
+    Assess disaster severity and potential impact.
+    
+    Args:
+        disaster_type: Type of disaster
+        magnitude_or_intensity: Magnitude or intensity measurement
+        affected_area_km2: Affected area in square kilometers
+        population_density: Population density in affected area
+        critical_infrastructure_count: Number of critical infrastructure elements
+        
+    Returns: JSON string with severity assessment
+    """
+    return severity_impact_analyzer.invoke({  # type: ignore
+        "disaster_type": disaster_type,
+        "magnitude_or_intensity": magnitude_or_intensity,
+        "affected_area_km2": affected_area_km2,
+        "population_density": population_density,
+        "critical_infrastructure_count": critical_infrastructure_count,
+    })
 
 
 @tool(return_direct=True)
 def identify_safe_zones(affected_area_geojson: str, infrastructure_data_json: str, disaster_type: str, evacuation_radius_km: float = 10.0) -> str:
-    return safe_zone_identifier(  # type: ignore
-        affected_area_geojson=affected_area_geojson,
-        infrastructure_data_json=infrastructure_data_json,
-        disaster_type=disaster_type,
-        evacuation_radius_km=evacuation_radius_km,
-    )
+    """
+    Identify safe zones for evacuation based on disaster type and infrastructure.
+    
+    Args:
+        affected_area_geojson: GeoJSON string of affected area
+        infrastructure_data_json: JSON string with infrastructure data
+        disaster_type: Type of disaster
+        evacuation_radius_km: Evacuation radius in kilometers (default: 10.0)
+        
+    Returns: JSON string with safe zone locations
+    """
+    return safe_zone_identifier.invoke({  # type: ignore
+        "affected_area_geojson": affected_area_geojson,
+        "infrastructure_data_json": infrastructure_data_json,
+        "disaster_type": disaster_type,
+        "evacuation_radius_km": evacuation_radius_km,
+    })
 
 
 @tool(return_direct=True)
 def plan_team_deployments(disaster_type: str, severity_level: str, teams_data_json: str, population_zones_json: str, watsonx_config: Dict[str, str]) -> str:
-    return watsonx_team_deployment_optimizer(  # type: ignore
-        disaster_type=disaster_type,
-        severity_level=severity_level,
-        teams_data_json=teams_data_json,
-        population_zones_json=population_zones_json,
-        watsonx_config=watsonx_config,
-    )
+    """
+    Optimize emergency team deployments using watsonx AI.
+    
+    Args:
+        disaster_type: Type of disaster
+        severity_level: Severity level of disaster
+        teams_data_json: JSON string with available teams data
+        population_zones_json: JSON string with population zone information
+        watsonx_config: Configuration dictionary for watsonx service
+        
+    Returns: JSON string with optimized deployment plan
+    """
+    return watsonx_team_deployment_optimizer.invoke({  # type: ignore
+        "disaster_type": disaster_type,
+        "severity_level": severity_level,
+        "teams_data_json": teams_data_json,
+        "population_zones_json": population_zones_json,
+        "watsonx_config": watsonx_config,
+    })
 
 
 @tool(return_direct=True)
 def plan_routes(from_locations_json: str, to_locations_json: str, route_type: str = "driving", alternatives: bool = True) -> str:
-    return osrm_route_planner(  # type: ignore
-        from_locations_json=from_locations_json,
-        to_locations_json=to_locations_json,
-        route_type=route_type,
-        alternatives=alternatives,
-    )
+    """
+    Plan optimal routes between locations using OSRM routing service.
+    
+    Args:
+        from_locations_json: JSON string with origin locations
+        to_locations_json: JSON string with destination locations
+        route_type: Type of routing (default: "driving")
+        alternatives: Whether to include alternative routes (default: True)
+        
+    Returns: JSON string with route plans
+    """
+    return osrm_route_planner.invoke({  # type: ignore
+        "from_locations_json": from_locations_json,
+        "to_locations_json": to_locations_json,
+        "route_type": route_type,
+        "alternatives": alternatives,
+    })
 
 
 @tool(return_direct=True)
 def optimize_evacuation_capacity(population_zones_json: str, evacuation_centers_json: str, routes_json: str) -> str:
-    return evacuation_capacity_optimizer(  # type: ignore
-        population_zones_json=population_zones_json,
-        evacuation_centers_json=evacuation_centers_json,
-        routes_json=routes_json,
-    )
+    """
+    Optimize evacuation capacity allocation across centers and routes.
+    
+    Args:
+        population_zones_json: JSON string with population zone data
+        evacuation_centers_json: JSON string with evacuation center information
+        routes_json: JSON string with available routes
+        
+    Returns: JSON string with optimized capacity allocation
+    """
+    return evacuation_capacity_optimizer.invoke({  # type: ignore
+        "population_zones_json": population_zones_json,
+        "evacuation_centers_json": evacuation_centers_json,
+        "routes_json": routes_json,
+    })
 
 
 __all__ = [
@@ -158,5 +236,4 @@ __all__ = [
     "plan_routes",
     "optimize_evacuation_capacity",
 ]
-
 

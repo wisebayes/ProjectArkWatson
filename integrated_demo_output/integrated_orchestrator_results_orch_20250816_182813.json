@@ -1,0 +1,53 @@
+{
+  "management_phase": "monitoring_only",
+  "planning_triggered": false,
+  "detection_summary": {
+    "event_detected": false,
+    "classification": {
+      "threat_detected": false,
+      "disaster_type": "unknown",
+      "confidence_score": 0.0,
+      "severity_level": "low",
+      "risk_factors": [
+        "Classification error: Cannot set Project or Space\nReason: {\"id\":\"WSCPA0000E\",\"code\":400,\"error\":\"Bad Request\",\"reason\":\"Invalid bearer auth type detected. Expected: 'Bearer'. Received: 'Basic'.\",\"message\":\"The server cannot or will not process the request due to an apparent client error (e.g. malformed request syntax).\"}"
+      ],
+      "recommendations": [
+        "Check tool configuration"
+      ],
+      "requires_confirmation": false,
+      "reasoning": "Tool execution failed"
+    },
+    "severity": {
+      "severity_level": "high",
+      "severity_score": 0.5,
+      "severity_factors": {
+        "population": "High population at risk: 31,415,899",
+        "infrastructure": "Some critical facilities: 5",
+        "area": "Large affected area: 31415.9 km\u00b2"
+      },
+      "population_at_risk": 31415899,
+      "affected_area_km2": 31415.899999999998,
+      "critical_infrastructure_count": 5,
+      "impact_assessment": {
+        "immediate_risk": false,
+        "evacuation_needed": false,
+        "emergency_response_required": false
+      },
+      "recommendations": [
+        "Prepare evacuation plans",
+        "Alert emergency services",
+        "Monitor situation closely",
+        "Issue public advisories"
+      ],
+      "escalation_required": true,
+      "timestamp": "2025-08-16T18:28:24.904327"
+    },
+    "monitoring": {
+      "total_sources": 5,
+      "total_alerts": 3939,
+      "polled_at": "2025-08-16T18:28:24.694349"
+    }
+  },
+  "session_id": "orch_20250816_182813",
+  "timestamp": "2025-08-16T18:28:24.906406"
+}

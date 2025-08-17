@@ -14,7 +14,11 @@ import sys
 from datetime import datetime
 from pathlib import Path
 from typing import Dict, Any
+import os
 
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Add src to path
 sys.path.insert(0, str(Path(__file__).parent / "src"))
@@ -47,6 +51,11 @@ async def _run_once(args: argparse.Namespace) -> Dict[str, Any]:
         }
     ]
 
+    print(args.watsonx_api_key)
+    print(args.watsonx_url)
+    print(args.watsonx_project_id)
+    print(args.watsonx_model_id)
+
     config: Dict[str, Any] = {
         "watsonx_config": {
             "api_key": args.watsonx_api_key or "",
@@ -60,6 +69,7 @@ async def _run_once(args: argparse.Namespace) -> Dict[str, Any]:
         monitoring_regions=monitoring_regions,
         session_id=args.session,
         config=config,
+        situation_description=args.situation,
     )
     return result
 
@@ -78,8 +88,17 @@ def main() -> int:
     parser.add_argument("--watsonx-project-id", dest="watsonx_project_id", default=None, help="Watsonx project ID")
     parser.add_argument("--watsonx-model-id", dest="watsonx_model_id", default="ibm/granite-13b-instruct-v2", help="Watsonx model ID")
 
+
+
+    parser.add_argument("--situation", default=None, help="Optional situation description text; if indicates ongoing, planning is triggered")
     args = parser.parse_args()
     _setup_logging(args.session)
+
+    load_dotenv()
+    args.watsonx_api_key = os.getenv("WATSONX_APIKEY")
+    args.watsonx_url = os.getenv("WATSONX_URL")
+    args.watsonx_project_id = os.getenv("WATSONX_PROJECT_ID")
+    args.watsonx_model_id = os.getenv("WATSONX_MODEL_ID")
 
     print("\n🌟 ProjectArkWatson - Orchestrator Integration Test")
     print("=" * 60)

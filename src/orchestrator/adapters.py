@@ -20,7 +20,7 @@ from .tools import (
     plan_routes,
     optimize_evacuation_capacity,
 )
-from ..monitoring.api_clients import DisasterMonitoringService
+from monitoring.api_clients import DisasterMonitoringService
 
 
 logger = logging.getLogger(__name__)
@@ -29,7 +29,7 @@ logger = logging.getLogger(__name__)
 class DetectionReActAdapter:
     """Simulates a ReAct-style agent for detection."""
 
-    async def run(self, lat: float, lon: float, radius_km: float, location_name: str, watsonx_config: Dict[str, str]) -> Dict[str, Any]:
+    async def run(self, lat: float, lon: float, radius_km: float, location_name: str, watsonx_config: Dict[str, str], situation_description: str | None = None) -> Dict[str, Any]:
         # Think: poll monitoring sources (run async directly to avoid nested event loops)
         async with DisasterMonitoringService() as svc:
             responses = await svc.poll_all_sources(lat, lon, radius_km)
@@ -49,6 +49,10 @@ class DetectionReActAdapter:
                 "total_sources": len(data),
                 "total_alerts": sum(d.alerts_count for d in data),
                 "polled_at": datetime.now().isoformat(),
+                "center_lat": lat,
+                "center_lon": lon,
+                "radius_km": radius_km,
+                "location_name": location_name,
             },
         }
 
@@ -67,12 +71,14 @@ class DetectionReActAdapter:
             "monitoring_data_json": monitoring_data_json,
             "location_json": location_json,
             "watsonx_config": watsonx_config,
+            "situation_description": situation_description or "",
         })
         classification = json.loads(classification_json)
 
         # Observe/Think: confirm if needed
         confirmation = None
-        if classification.get("requires_confirmation"):
+        # Skip confirmation if ongoing is indicated
+        if classification.get("requires_confirmation") and not classification.get("ongoing", False):
             confirmation_json = confirm_disaster_via_web.invoke({
                 "disaster_type": classification.get("disaster_type", "unknown"),
                 "location_name": location_name,
