@@ -42,6 +42,13 @@ streamlit>=1.36.0
 plotly>=5.23.0
 pydeck>=0.9.1
 
+# Web API Server
+fastapi>=0.111.0
+uvicorn>=0.29.0
+python-multipart>=0.0.9
+itsdangerous>=2.2.0
+starlette>=0.37.2
+
 # Testing and Validation
 pytest>=7.4.0
 pytest-asyncio>=0.21.0
