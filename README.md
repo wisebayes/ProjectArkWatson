@@ -25,94 +25,16 @@ These keep the current LangGraph flows intact while enabling progressive migrati
 
 ### Detection (ReAct-style)
 
+Mermaid Diagram for Detection/Prediction Workflow:
+![Detection Workflow](detection.svg)
 
-Mermaid source:
-
-```mermaid
-graph TD
-subgraph Monitoring
-  A["API Monitoring"]
-end
-subgraph Data Analysis
-  B["Data Analysis"]
-end
-subgraph Classification
-  C["WatsonX Classification"]
-end
-subgraph Confirmation
-  D["Web Search Confirmation"]
-  FP["Log False Positive"]
-end
-subgraph "Severity & Safe Zones"
-  E["Severity Assessment"]
-  F["Safe Zone Analysis"]
-end
-subgraph "Event & Escalation"
-  G["Create Event Record"]
-  H["Trigger Planning Workflow"]
-end
-subgraph "Loop Control"
-  I["Wait Interval"]
-end
-A -->|OK| B
-A -->|Error| I
-A -.->|Retry| A
-B -->|Threat suspected| C
-B -->|No signal| I
-C -->|Needs confirmation| D
-C -->|Confident / ongoing| E
-C -->|No threat| I
-D -->|Confirmed| E
-D -->|Not confirmed| FP
-FP --> I
-E -->|Escalation required| F
-E -->|Moderate| G
-F --> G
-G -->|Trigger planning| H
-G -->|No trigger| I
-H --> I
-I --> A
-```
 
 ### Planning (Plan-Act-style)
 
-Mermaid source:
+Mermaid Diagram for Planning/Management Workflow:
 
-```mermaid
-graph TD
-subgraph "Initialization"
-  A["Load Planning Data"]
-end
-subgraph "Assessment"
-  B["Assess Planning Requirements"]
-end
-subgraph "Planning"
-  C["Create Deployment Plan"]
-  D["Create Evacuation Plan"]
-end
-subgraph "Coordination"
-  E["Coordinate Resources"]
-end
-subgraph "Notifications"
-  F["Generate Notifications"]
-  G["Send Notifications"]
-end
-subgraph "Completion"
-  H["Planning Complete"]
-  X["Planning Error Handling"]
-  Z["End"]
-end
-A -->|"Success"| B
-A -->|"Failure"| X
-B --> C
-C --> D
-D --> E
-E --> F
-F --> G
-G --> H
-H --> Z
-X --> Z
-```
+![Planning Workflow](planning.svg)
+
 
 ## Orchestrator-Style Integrated Demo
 
