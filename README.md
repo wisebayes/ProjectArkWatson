@@ -74,8 +74,6 @@ H --> I
 I --> A
 ```
 
-Source file: `detection.mmd`
-
 ### Planning (Plan-Act-style)
 
 Mermaid source:
@@ -115,8 +113,6 @@ G --> H
 H --> Z
 X --> Z
 ```
-
-Source file: `planning.mmd`
 
 ## Orchestrator-Style Integrated Demo
 
