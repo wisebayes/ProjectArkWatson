@@ -1,8 +1,0 @@
-2025-08-16 18:35:27,352 - INFO - Orchestrator: running detection (ReAct)
-2025-08-16 18:35:27,991 - ERROR - FEMA API error: 400
-2025-08-16 18:35:36,278 - INFO - response: https://www.bing.com/search?q=earthquake+San+Francisco+Bay+Area+2025&filters=ex1%3A%22ez1%22 200
-2025-08-16 18:35:37,544 - INFO - response: https://www.bing.com/search?q=earthquake+San+Francisco+Bay+Area+2025&filters=ex1%3A%22ez1%22&first=11&FORM=PERE 200
-2025-08-16 18:35:38,522 - INFO - response: https://www.bing.com/search?q=earthquake+San+Francisco+Bay+Area+2025&filters=ex1%3A%22ez1%22&first=21&FORM=PERE1 200
-2025-08-16 18:35:38,731 - INFO - response: https://www.bing.com/search?q=earthquake+alert+San+Francisco+Bay+Area&filters=ex1%3A%22ez1%22 200
-2025-08-16 18:35:39,869 - INFO - response: https://www.bing.com/search?q=earthquake+alert+San+Francisco+Bay+Area&filters=ex1%3A%22ez1%22&first=11&FORM=PERE 200
-2025-08-16 18:35:40,082 - INFO - Orchestrator: running planning (Plan-Act)

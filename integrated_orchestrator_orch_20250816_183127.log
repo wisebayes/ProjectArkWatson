@@ -1,8 +1,0 @@
-2025-08-16 18:31:27,155 - INFO - Orchestrator: running detection (ReAct)
-2025-08-16 18:31:27,728 - ERROR - FEMA API error: 400
-2025-08-16 18:31:37,760 - INFO - Client successfully initialized
-2025-08-16 18:31:37,951 - WARNING - Cannot set Project or Space
-Reason: {"id":"WSCPA0000E","code":400,"error":"Bad Request","reason":"Invalid bearer auth type detected. Expected: 'Bearer'. Received: 'Basic'.","message":"The server cannot or will not process the request due to an apparent client error (e.g. malformed request syntax)."}
-2025-08-16 18:31:37,952 - ERROR - WatsonX classifier tool error: Cannot set Project or Space
-Reason: {"id":"WSCPA0000E","code":400,"error":"Bad Request","reason":"Invalid bearer auth type detected. Expected: 'Bearer'. Received: 'Basic'.","message":"The server cannot or will not process the request due to an apparent client error (e.g. malformed request syntax)."}
-2025-08-16 18:31:37,955 - INFO - Orchestrator: no threat detected; returning detection-only result

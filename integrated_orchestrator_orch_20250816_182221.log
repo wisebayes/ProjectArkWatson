@@ -1,6 +1,0 @@
-2025-08-16 18:22:21,152 - INFO - Orchestrator: running detection (ReAct)
-2025-08-16 18:22:21,768 - ERROR - FEMA API error: 400
-2025-08-16 18:22:34,830 - ERROR - WatsonX classifier tool error: 1 validation error for WatsonxLLM
-  Value error, Did not find 'apikey' or 'token', please add an environment variable `WATSONX_APIKEY` or 'WATSONX_TOKEN' which contains it, or pass 'apikey' or 'token' as a named parameter. [type=value_error, input_value={'model_id': 'ibm/granite...p_k': 50, 'top_p': 0.9}}, input_type=dict]
-    For further information visit https://errors.pydantic.dev/2.11/v/value_error
-2025-08-16 18:22:34,831 - INFO - Orchestrator: no threat detected; returning detection-only result

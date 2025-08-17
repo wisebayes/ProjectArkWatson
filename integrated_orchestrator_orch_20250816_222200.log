@@ -1,9 +1,0 @@
-2025-08-16 22:22:00,777 - INFO - Orchestrator: running detection (ReAct)
-2025-08-16 22:22:01,209 - ERROR - FEMA API error: 400
-2025-08-16 22:22:04,464 - INFO - response: https://www.bing.com/search?q=earthquake+Alaska+2025&filters=ex1%3A%22ez1%22 200
-2025-08-16 22:22:05,312 - INFO - response: https://www.bing.com/search?q=earthquake+alert+Alaska&filters=ex1%3A%22ez1%22 200
-2025-08-16 22:22:06,242 - INFO - response: https://www.bing.com/search?q=earthquake+alert+Alaska&filters=ex1%3A%22ez1%22&first=11&FORM=PERE 200
-2025-08-16 22:22:07,269 - INFO - response: https://www.bing.com/search?q=earthquake+alert+Alaska&filters=ex1%3A%22ez1%22&first=21&FORM=PERE1 200
-2025-08-16 22:22:08,330 - INFO - response: https://www.bing.com/search?q=earthquake+alert+Alaska&filters=ex1%3A%22ez1%22&first=31&FORM=PERE2 200
-2025-08-16 22:22:09,309 - INFO - response: https://www.bing.com/search?q=earthquake+alert+Alaska&filters=ex1%3A%22ez1%22&first=41&FORM=PERE3 200
-2025-08-16 22:22:09,462 - INFO - Orchestrator: running planning (Plan-Act)
