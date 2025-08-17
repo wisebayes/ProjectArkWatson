@@ -25,9 +25,6 @@ These keep the current LangGraph flows intact while enabling progressive migrati
 
 ### Detection (ReAct-style)
 
-Rendered SVG (if available):
-
-![Detection Workflow](detection.svg)
 
 Mermaid source:
 
@@ -80,10 +77,6 @@ I --> A
 Source file: `detection.mmd`
 
 ### Planning (Plan-Act-style)
-
-Rendered SVG:
-
-![Planning Workflow](planning.svg)
 
 Mermaid source:
 
