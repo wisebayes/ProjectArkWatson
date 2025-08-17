@@ -1,0 +1,2 @@
+uvicorn src.api_server:app --reload --port 8080
+npm run dev --prefix /Users/chand/IBM_Hax/ProjectArkWatson/webapp

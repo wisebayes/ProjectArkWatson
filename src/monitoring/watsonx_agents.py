@@ -14,6 +14,8 @@ from langchain_core.prompts import PromptTemplate
 from langchain_ibm import WatsonxLLM
 from langchain_community.tools import DuckDuckGoSearchRun
 from langchain_community.utilities import DuckDuckGoSearchAPIWrapper
+import warnings
+warnings.filterwarnings("ignore")
 
 from core.state import (
     DisasterType, SeverityLevel, AlertStatus, MonitoringData, 

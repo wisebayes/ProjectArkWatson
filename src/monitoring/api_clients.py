@@ -320,8 +320,8 @@ class FEMAOpenDataClient:
                         alerts_count=len(data.get("DisasterDeclarationsSummaries", []))
                     )
                 else:
-                    error_msg = f"FEMA API error: {response.status}"
-                    logger.error(error_msg)
+                    error_msg = f"Skipping FEMA API: {response.status}"
+                    logger.info(error_msg)
                     return APIResponse(
                         source=self.source,
                         success=False,

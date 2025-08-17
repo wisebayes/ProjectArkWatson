@@ -1,7 +1,7 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
-import { ResponsiveContainer, ScatterChart, Scatter, XAxis, YAxis, ZAxis, Tooltip, CartesianGrid, BarChart, Bar, RadialBarChart, RadialBar, PieChart, Pie, Cell } from "recharts";
+import { ResponsiveContainer, ScatterChart, Scatter, XAxis, YAxis, ZAxis, Tooltip, CartesianGrid, BarChart, Bar, RadialBarChart, RadialBar, PieChart, Pie, Cell, AreaChart, Area } from "recharts";
 import { Tabs } from "@/components/Tabs";
 import { MapView } from "@/components/MapView";
 
@@ -32,6 +32,8 @@ export default function Home() {
   const [wx, setWx] = useState<{ apiKey: string; url: string; projectId: string; modelId: string}>(
     { apiKey: "", url: "https://us-south.ml.cloud.ibm.com", projectId: "", modelId: "ibm/granite-3-3-8b-instruct" }
   );
+  const [toastMsg, setToastMsg] = useState<string | null>(null);
+  const toastTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   
 
   const classification = latest?.detection_summary?.classification || {};
@@ -57,8 +59,29 @@ export default function Home() {
     return () => clearInterval(id);
   }, [autoRefresh, intervalSec]);
 
+  function showToast(msg: string) {
+    setToastMsg(msg);
+    if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
+    toastTimerRef.current = setTimeout(() => setToastMsg(null), 5000);
+  }
+
+  function handleRunComplete(data: OrchestratorResult) {
+    setLatest(data);
+    const threat = Boolean(data?.detection_summary?.classification?.threat_detected);
+    if (threat) {
+      showToast("Sending Data for Planning Agents");
+    }
+  }
+
   return (
     <div className="space-y-6">
+      {toastMsg && (
+        <div className="fixed top-4 right-4 z-50">
+          <div className="rounded-lg shadow-lg border border-white/10 bg-emerald-600/90 text-white px-4 py-3 text-sm font-semibold">
+            {toastMsg}
+          </div>
+        </div>
+      )}
       <Header latest={latest} />
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <Stat label="Phase" value={latest?.management_phase || "unknown"} />
@@ -76,11 +99,93 @@ export default function Home() {
         onAutoRefresh={setAutoRefresh}
         onIntervalSec={setIntervalSec}
         onRefresh={fetchLatest}
-        onRunComplete={setLatest}
+        onRunComplete={handleRunComplete}
         onApplySummary={(txt) => latest && setLatest({ ...latest, watsonx_summary: txt })}
         watsonx={wx}
         setWatsonx={setWx}
       />
+    </div>
+  );
+}
+
+function TwitterSentimentSimulation() {
+  const [points, setPoints] = useState<{ t: number; pos: number; neg: number }[]>([]);
+  const [tick, setTick] = useState(0);
+  useEffect(() => {
+    const id = setInterval(() => setTick(t => t + 1), 1200);
+    return () => clearInterval(id);
+  }, []);
+  useEffect(() => {
+    const last = points[points.length - 1];
+    const baseT = last ? last.t + 1 : 0;
+    const pos = Math.max(0, Math.min(100, (last?.pos ?? 55) + (Math.random() * 6 - 3)));
+    const neg = Math.max(0, Math.min(100, 100 - pos + (Math.random() * 4 - 2)));
+    const next = [...points, { t: baseT, pos: Number(pos.toFixed(1)), neg: Number(neg.toFixed(1)) }].slice(-30);
+    setPoints(next);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tick]);
+  const data = points.map(p => ({ time: p.t, Positive: p.pos, Negative: p.neg }));
+  return (
+    <div>
+      <div className="text-xs text-zinc-400 mb-2">Simulated social sentiment trend (Twitter-like stream)</div>
+      <div className="h-[220px]">
+        <ResponsiveContainer width="100%" height="100%">
+          <AreaChart data={data}>
+            <CartesianGrid strokeDasharray="3 3" stroke="#2b3445" />
+            <XAxis dataKey="time" tick={{ fill: "#9aa4b2" }} stroke="#596375" />
+            <YAxis tick={{ fill: "#9aa4b2" }} stroke="#596375" domain={[0, 100]} />
+            <Tooltip cursor={{ strokeDasharray: "3 3" }} />
+            <Area type="monotone" dataKey="Positive" stroke="#10b981" fill="#10b98133" />
+            <Area type="monotone" dataKey="Negative" stroke="#ef4444" fill="#ef444433" />
+          </AreaChart>
+        </ResponsiveContainer>
+      </div>
+      <div className="mt-3 grid grid-cols-3 gap-3 text-sm">
+        <div className="rounded bg-black/20 border border-white/10 p-3">
+          <div className="text-xs text-zinc-400">Sample volume (min)</div>
+          <div className="text-xl font-semibold">{(500 + Math.floor(Math.random()*150)).toLocaleString()}</div>
+        </div>
+        <div className="rounded bg-black/20 border border-white/10 p-3">
+          <div className="text-xs text-zinc-400">Top hashtag</div>
+          <div className="text-xl font-semibold">#SFEarthquake2025</div>
+        </div>
+        <div className="rounded bg-black/20 border border-white/10 p-3">
+          <div className="text-xs text-zinc-400">Geo focus</div>
+          <div className="text-xl font-semibold">San Francisco</div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function NewsSimulationPanel() {
+  const [items, setItems] = useState<{ id: number; title: string; ts: string }[]>([]);
+  useEffect(() => {
+    const seed: string[] = [
+      "M6.9 earthquake shakes Bay Area; aftershocks expected",
+      "City officials: Partial bridge closures for structural checks",
+      "Hospitals report surge; emergency rooms near capacity",
+      "BART service delays; shuttle buses activated",
+      "Shelter locations opening across SF and Oakland",
+      "Emergency alert: Avoid waterfront due to potential tsunami advisory",
+    ];
+    let counter = 0;
+    setItems(seed.slice(0, 3).map((t, i) => ({ id: i, title: t, ts: new Date().toLocaleTimeString() })));
+    const id = setInterval(() => {
+      const next = seed[(counter++) % seed.length];
+      setItems(prev => [{ id: Date.now(), title: next, ts: new Date().toLocaleTimeString() }, ...prev].slice(0, 8));
+    }, 2500);
+    return () => clearInterval(id);
+  }, []);
+  return (
+    <div className="space-y-2 max-h-[280px] overflow-auto">
+      {items.map(n => (
+        <div key={n.id} className="rounded border border-white/10 bg-black/20 p-3">
+          <div className="text-sm font-semibold">{n.title}</div>
+          <div className="text-xs text-zinc-500">{n.ts}</div>
+        </div>
+      ))}
+      {items.length === 0 && <div className="text-sm text-zinc-400">Waiting for updates…</div>}
     </div>
   );
 }
@@ -483,62 +588,61 @@ function RunPanel({ onRunComplete }: { onRunComplete: (r: OrchestratorResult) =>
 
   return (
     <div className="space-y-3 text-sm">
-      <div className="grid grid-cols-2 gap-3">
-        <div>
-          <label className="block text-zinc-300 mb-1">Workflow</label>
-          <select value={mode} onChange={e => setMode(e.target.value as any)} className="w-full rounded bg-black/30 border border-white/10 px-2 py-2">
-            <option>Detection</option>
-            <option>Complete Response</option>
-          </select>
-        </div>
-        <div>
-          <label className="block text-zinc-300 mb-1">Granite model</label>
-          <select value={modelId} onChange={e => setModelId(e.target.value)} className="w-full rounded bg-black/30 border border-white/10 px-2 py-2">
-            <option>ibm/granite-3-8b-instruct</option>
-            <option>ibm/granite-3-3-8b-instruct</option>
-            <option>ibm/granite-13b-instruct-v2</option>
-            <option>ibm/granite-13b-chat-v2</option>
-            <option>ibm/granite-20b-multilingual</option>
-          </select>
-        </div>
+      <div>
+        <label className="block text-zinc-300 mb-1">Granite model</label>
+        <select value={modelId} onChange={e => setModelId(e.target.value)} className="w-full rounded bg-black/30 border border-white/10 px-2 py-2">
+          <option>ibm/granite-3-8b-instruct</option>
+          <option>ibm/granite-3-3-8b-instruct</option>
+          <option>ibm/granite-13b-instruct-v2</option>
+          <option>ibm/granite-13b-chat-v2</option>
+          <option>ibm/granite-20b-multilingual</option>
+        </select>
       </div>
 
       <div>
-        <label className="block text-zinc-300 mb-1">Region</label>
-        <input value={region} onChange={e => setRegion(e.target.value)} className="w-full rounded bg-black/30 border border-white/10 px-2 py-2" />
-      </div>
-      <div className="grid grid-cols-3 gap-3">
-        <div>
-          <label className="block text-zinc-300 mb-1">Lat</label>
-          <input type="number" value={lat} onChange={e => setLat(Number(e.target.value))} className="w-full rounded bg-black/30 border border-white/10 px-2 py-2" />
-        </div>
-        <div>
-          <label className="block text-zinc-300 mb-1">Lon</label>
-          <input type="number" value={lon} onChange={e => setLon(Number(e.target.value))} className="w-full rounded bg-black/30 border border-white/10 px-2 py-2" />
-        </div>
-        <div>
-          <label className="block text-zinc-300 mb-1">Radius (km)</label>
-          <input type="number" value={radius} onChange={e => setRadius(Number(e.target.value))} className="w-full rounded bg-black/30 border border-white/10 px-2 py-2" />
-        </div>
+        <label className="block text-zinc-300 mb-1">Situation / Instructions</label>
+        <textarea value={prompt} onChange={e => setPrompt(e.target.value)} rows={4} className="w-full rounded bg-black/30 border border-white/10 px-2 py-2" placeholder="Describe the situation or provide instructions for the planning agents..." />
       </div>
 
+      <button disabled={busy} onClick={submit} className="rounded bg-emerald-600 hover:bg-emerald-500 transition px-4 py-2 font-semibold">
+        {busy ? "Running..." : "Run"}
+      </button>
+
       <details className="rounded border border-white/10 bg-black/20 p-3">
-        <summary className="cursor-pointer text-zinc-300">Watsonx configuration</summary>
+        <summary className="cursor-pointer text-zinc-300">Advanced options</summary>
+        <div className="grid grid-cols-2 gap-3 mt-3">
+          <div>
+            <label className="block text-zinc-300 mb-1">Workflow</label>
+            <select value={mode} onChange={e => setMode(e.target.value as any)} className="w-full rounded bg-black/30 border border-white/10 px-2 py-2">
+              <option>Detection</option>
+              <option>Complete Response</option>
+            </select>
+          </div>
+          <div>
+            <label className="block text-zinc-300 mb-1">Region</label>
+            <input value={region} onChange={e => setRegion(e.target.value)} className="w-full rounded bg-black/30 border border-white/10 px-2 py-2" />
+          </div>
+        </div>
+        <div className="grid grid-cols-3 gap-3 mt-3">
+          <div>
+            <label className="block text-zinc-300 mb-1">Lat</label>
+            <input type="number" value={lat} onChange={e => setLat(Number(e.target.value))} className="w-full rounded bg-black/30 border border-white/10 px-2 py-2" />
+          </div>
+          <div>
+            <label className="block text-zinc-300 mb-1">Lon</label>
+            <input type="number" value={lon} onChange={e => setLon(Number(e.target.value))} className="w-full rounded bg-black/30 border border-white/10 px-2 py-2" />
+          </div>
+          <div>
+            <label className="block text-zinc-300 mb-1">Radius (km)</label>
+            <input type="number" value={radius} onChange={e => setRadius(Number(e.target.value))} className="w-full rounded bg-black/30 border border-white/10 px-2 py-2" />
+          </div>
+        </div>
         <div className="grid grid-cols-3 gap-3 mt-3">
           <input placeholder="API key" value={apiKey} onChange={e => setApiKey(e.target.value)} className="w-full rounded bg-black/30 border border-white/10 px-2 py-2" />
           <input placeholder="URL" value={url} onChange={e => setUrl(e.target.value)} className="w-full rounded bg-black/30 border border-white/10 px-2 py-2" />
           <input placeholder="Project ID" value={projectId} onChange={e => setProjectId(e.target.value)} className="w-full rounded bg-black/30 border border-white/10 px-2 py-2" />
         </div>
       </details>
-
-      <div>
-        <label className="block text-zinc-300 mb-1">Situation / Instructions</label>
-        <textarea value={prompt} onChange={e => setPrompt(e.target.value)} rows={3} className="w-full rounded bg-black/30 border border-white/10 px-2 py-2" />
-      </div>
-
-      <button disabled={busy} onClick={submit} className="rounded bg-emerald-600 hover:bg-emerald-500 transition px-4 py-2 font-semibold">
-        {busy ? "Running..." : "Run"}
-      </button>
     </div>
   );
 }
@@ -575,32 +679,33 @@ function DashboardTabs({
     <div className="space-y-4">
       <Tabs tabs={["Overview", "Planning", "Risk", "Raw"]} current={tab} onChange={setTab} />
       {tab === "Overview" && (
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <Section title="Executive Summary">{latest ? <KeyResults data={latest} /> : <div className="text-zinc-400">No data yet.</div>}</Section>
-          <Section title="AI Executive Summary">
-            {latest?.watsonx_summary ? (
-              <div className="prose prose-invert max-w-none whitespace-pre-wrap">{latest.watsonx_summary}</div>
-            ) : (
-              <GenerateSummary latest={latest} onApply={onApplySummary} watsonx={watsonx} />
-            )}
-          </Section>
-          <Section title="Controls">
-            <div className="flex items-center gap-3 text-sm">
-              <label className="flex items-center gap-2">
-                <input type="checkbox" className="accent-emerald-500" checked={autoRefresh} onChange={e => onAutoRefresh(e.target.checked)} />
-                Auto-refresh
-              </label>
-              <div className="flex items-center gap-2">
-                <span>Every</span>
-                <input type="number" min={3} max={60} value={intervalSec} onChange={e => onIntervalSec(Number(e.target.value))} className="w-16 rounded bg-black/30 border border-white/10 px-2 py-1" />
-                <span>sec</span>
-              </div>
-              <button className="ml-auto rounded bg-emerald-600 px-3 py-1 text-sm font-semibold" onClick={onRefresh}>Refresh now</button>
+        <div className="space-y-6">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <Section title="Executive Summary">{latest ? <KeyResults data={latest} /> : <div className="text-zinc-400">No data yet.</div>}</Section>
+            <Section title="AI Executive Summary">
+              {latest?.watsonx_summary ? (
+                <div className="prose prose-invert max-w-none whitespace-pre-wrap">{latest.watsonx_summary}</div>
+              ) : (
+                <GenerateSummary latest={latest} onApply={onApplySummary} watsonx={watsonx} />
+              )}
+            </Section>
+            <Section title="Run">
+              <RunPanel onRunComplete={onRunComplete} />
+            </Section>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="lg:col-span-2">
+              <Section title="Twitter Sentiment — San Francisco 2025 Earthquake">
+                <TwitterSentimentSimulation />
+              </Section>
             </div>
-          </Section>
-          <Section title="Run">
-            <RunPanel onRunComplete={onRunComplete} />
-          </Section>
+            <div className="lg:col-span-1">
+              <Section title="Live News Simulation">
+                <NewsSimulationPanel />
+              </Section>
+            </div>
+          </div>
         </div>
       )}
       {tab === "Planning" && (

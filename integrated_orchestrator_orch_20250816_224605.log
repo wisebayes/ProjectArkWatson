@@ -1,0 +1,5 @@
+2025-08-16 22:46:05,313 - INFO - Orchestrator: running detection (ReAct)
+2025-08-16 22:46:05,706 - INFO - Skipping FEMA API: 400
+2025-08-16 22:46:15,711 - INFO - response: https://www.bing.com/search?q=earthquake+San+Francisco+Bay+Area+2025&filters=ex1%3A%22ez1%22 200
+2025-08-16 22:46:15,894 - INFO - response: https://www.bing.com/search?q=earthquake+alert+San+Francisco+Bay+Area&filters=ex1%3A%22ez1%22 200
+2025-08-16 22:46:15,983 - INFO - Orchestrator: running planning (Plan-Act)
