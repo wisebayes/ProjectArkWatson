@@ -1,5 +1,6 @@
 # ProjectArkWatson (PAW)
-IBM Hackathon Submission
+The Noah's Ark of AI. An Agentic Framework for Disaster Management using IBM Watsonx.
+(IBM Hackathon submission)
 
 ## Description
 - ArkWatson leverages agentic capabilities for end-to-end disaster management scenarios of various types, including continous monitoring, alerts, predictions and planning.
@@ -20,6 +21,110 @@ Local adapters allow running the agent logic without the Orchestrator control pl
 
 These keep the current LangGraph flows intact while enabling progressive migration.
 
+## Agentic Workflow Diagrams
+
+### Detection (ReAct-style)
+
+Rendered SVG (if available):
+
+![Detection Workflow](detection.svg)
+
+Mermaid source:
+
+```mermaid
+graph TD
+subgraph Monitoring
+  A["API Monitoring"]
+end
+subgraph Data Analysis
+  B["Data Analysis"]
+end
+subgraph Classification
+  C["WatsonX Classification"]
+end
+subgraph Confirmation
+  D["Web Search Confirmation"]
+  FP["Log False Positive"]
+end
+subgraph "Severity & Safe Zones"
+  E["Severity Assessment"]
+  F["Safe Zone Analysis"]
+end
+subgraph "Event & Escalation"
+  G["Create Event Record"]
+  H["Trigger Planning Workflow"]
+end
+subgraph "Loop Control"
+  I["Wait Interval"]
+end
+A -->|OK| B
+A -->|Error| I
+A -.->|Retry| A
+B -->|Threat suspected| C
+B -->|No signal| I
+C -->|Needs confirmation| D
+C -->|Confident / ongoing| E
+C -->|No threat| I
+D -->|Confirmed| E
+D -->|Not confirmed| FP
+FP --> I
+E -->|Escalation required| F
+E -->|Moderate| G
+F --> G
+G -->|Trigger planning| H
+G -->|No trigger| I
+H --> I
+I --> A
+```
+
+Source file: `detection.mmd`
+
+### Planning (Plan-Act-style)
+
+Rendered SVG:
+
+![Planning Workflow](planning.svg)
+
+Mermaid source:
+
+```mermaid
+graph TD
+subgraph "Initialization"
+  A["Load Planning Data"]
+end
+subgraph "Assessment"
+  B["Assess Planning Requirements"]
+end
+subgraph "Planning"
+  C["Create Deployment Plan"]
+  D["Create Evacuation Plan"]
+end
+subgraph "Coordination"
+  E["Coordinate Resources"]
+end
+subgraph "Notifications"
+  F["Generate Notifications"]
+  G["Send Notifications"]
+end
+subgraph "Completion"
+  H["Planning Complete"]
+  X["Planning Error Handling"]
+  Z["End"]
+end
+A -->|"Success"| B
+A -->|"Failure"| X
+B --> C
+C --> D
+D --> E
+E --> F
+F --> G
+G --> H
+H --> Z
+X --> Z
+```
+
+Source file: `planning.mmd`
+
 ## Orchestrator-Style Integrated Demo
 
 Run the local integrated flow:
@@ -37,18 +142,22 @@ python demo_orchestrator_integration.py \
   --situation "There is an ongoing wildfire impacting the East Bay currently"
 ```
 
-## Dashboard
+Environment configuration (loaded from `.env`):
 
-A live dashboard is available using Streamlit:
+- `WATSONX_APIKEY`: IBM watsonx.ai API key
+- `WATSONX_URL`: IBM watsonx.ai base URL (default `https://us-south.ml.cloud.ibm.com`)
+- `WATSONX_PROJECT_ID`: watsonx.ai project ID
+- `WATSONX_MODEL_ID`: model ID (e.g., `ibm/granite-13b-instruct-v2`)
 
-```bash
-streamlit run src/dashboard/app.py
-```
+You can start from the provided template at `ProjectArkWatson/config_template.env` and copy it to `.env`.
 
-It watches `integrated_demo_output/` for the latest `integrated_orchestrator_results_*.json` file and displays:
+## IBM Technology Highlights
 
-- Classification and severity details
-- Live map of monitored region
-- Bubble chart of evacuation route capacity vs distance
-
+- IBM watsonx Orchestrator (ADK):
+  - Native agents using ReAct and Plan-Act styles, with Python tools mapped to our monitoring and planning functions
+  - YAML agent definitions: `orchestrator_agents/detection_react.yaml`, `orchestrator_agents/planning_plan_act.yaml`
+- IBM watsonx.ai LLMs via `langchain-ibm` and `ibm-watsonx-ai`:
+  - Granite family (e.g., `ibm/granite-13b-instruct-v2`) for classification and planning prompts
+  - Tool-centric reasoning for classification, severity assessment, and optimization
+- Optional integration path to import agents into watsonx Orchestrate and register tools for production use
 

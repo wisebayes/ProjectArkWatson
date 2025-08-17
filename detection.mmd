@@ -1,0 +1,43 @@
+graph TD
+subgraph Monitoring
+  A["API Monitoring"]
+end
+subgraph Data Analysis
+  B["Data Analysis"]
+end
+subgraph Classification
+  C["WatsonX Classification"]
+end
+subgraph Confirmation
+  D["Web Search Confirmation"]
+  FP["Log False Positive"]
+end
+subgraph "Severity & Safe Zones"
+  E["Severity Assessment"]
+  F["Safe Zone Analysis"]
+end
+subgraph "Event & Escalation"
+  G["Create Event Record"]
+  H["Trigger Planning Workflow"]
+end
+subgraph "Loop Control"
+  I["Wait Interval"]
+end
+A -->|OK| B
+A -->|Error| I
+A -.->|Retry| A
+B -->|Threat suspected| C
+B -->|No signal| I
+C -->|Needs confirmation| D
+C -->|Confident / ongoing| E
+C -->|No threat| I
+D -->|Confirmed| E
+D -->|Not confirmed| FP
+FP --> I
+E -->|Escalation required| F
+E -->|Moderate| G
+F --> G
+G -->|Trigger planning| H
+G -->|No trigger| I
+H --> I
+I --> A
